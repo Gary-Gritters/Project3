@@ -1,8 +1,5 @@
-package p3;
-
-import java.awt.Dimension;
-
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
 
 public class ChessGUI {
 

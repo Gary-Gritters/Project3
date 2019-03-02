@@ -1,21 +1,19 @@
-package p3;
-
 public class Knight extends ChessPiece {
 
-	public Knight(Player player) {
-		super(player);
-	}
+    public Knight(Player player) {
+        super(player);
+    }
 
-	public String type() {
-		return "Knight";
-	}
+    public String type() {
+        return "Knight";
+    }
 
-	public boolean isValidMove(Move move, IChessPiece[][] board){
+    public boolean isValidMove(Move move, IChessPiece[][] board) {
 
-		boolean valid = true;
+        boolean valid = true;
         // More code is needed
-		return valid;
-		
-	}
+        return valid;
+
+    }
 
 }

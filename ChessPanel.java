@@ -1,20 +1,16 @@
-package p3;
-
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ChessPanel extends JPanel {
 
     private JButton[][] board;
     private ChessModel model;
 
-    private ImageIcon wRook;
-    private ImageIcon wBishop;
-    private ImageIcon wQueen;
-    private ImageIcon wKing;
-    private ImageIcon wPawn;
-    private ImageIcon wKnight;
+    private ImageIcon wRook, wBishop, wQueen, wKing, wPawn, wKnight;
+    private ImageIcon bRook, bBishop, bQueen, bKing, bPawn, bKnight;
+
 
     private boolean firstTurnFlag;
     private int fromRow;
@@ -40,8 +36,11 @@ public class ChessPanel extends JPanel {
                 if (model.pieceAt(r, c) == null) {
                     board[r][c] = new JButton("", null);
                     board[r][c].addActionListener(listener);
-                } else if (model.pieceAt(r, c).player() == Player.WHITE)
-                    placeWhitePieces(r, c);
+                } else if (model.pieceAt(r, c).player() == Player.WHITE) {
+                    placePieces(r, c);
+                } else if (model.pieceAt(r, c).player() == Player.BLACK) {
+                    placePieces(r, c);
+                }
 
                 setBackGroundColor(r, c);
                 boardpanel.add(board[r][c]);
@@ -51,6 +50,8 @@ public class ChessPanel extends JPanel {
         boardpanel.setPreferredSize(new Dimension(600, 600));
         add(buttonpanel);
         firstTurnFlag = true;
+
+
     }
 
     private void setBackGroundColor(int r, int c) {
@@ -61,41 +62,90 @@ public class ChessPanel extends JPanel {
         }
     }
 
-    private void placeWhitePieces(int r, int c) {
+    private void placePieces(int r, int c) {
+
         if (model.pieceAt(r, c).type().equals("Pawn")) {
-            board[r][c] = new JButton(null, wPawn);
-            board[r][c].addActionListener(listener);
+            if(model.pieceAt(r, c).player() == Player.WHITE) {
+                board[r][c] = new JButton(null, wPawn);
+                board[r][c].addActionListener(listener);
+            }
+            else {
+                board[r][c] = new JButton(null, bPawn);
+                board[r][c].addActionListener(listener);
+            }
         }
+
         if (model.pieceAt(r, c).type().equals("Rook")) {
-            board[r][c] = new JButton(null, wRook);
-            board[r][c].addActionListener(listener);
+            if(model.pieceAt(r, c).player() == Player.WHITE) {
+                board[r][c] = new JButton(null, wRook);
+                board[r][c].addActionListener(listener);
+            }
+            else {
+                board[r][c] = new JButton(null, bRook);
+                board[r][c].addActionListener(listener);
+            }
         }
+
         if (model.pieceAt(r, c).type().equals("Knight")) {
-            board[r][c] = new JButton(null, wKnight);
-            board[r][c].addActionListener(listener);
+            if(model.pieceAt(r, c).player() == Player.WHITE) {
+                board[r][c] = new JButton(null, wKnight);
+                board[r][c].addActionListener(listener);
+            }
+            else {
+                board[r][c] = new JButton(null, bKnight);
+                board[r][c].addActionListener(listener);
+            }
         }
+
         if (model.pieceAt(r, c).type().equals("Bishop")) {
-            board[r][c] = new JButton(null, wBishop);
-            board[r][c].addActionListener(listener);
+            if(model.pieceAt(r, c).player() == Player.WHITE) {
+                board[r][c] = new JButton(null, wBishop);
+                board[r][c].addActionListener(listener);
+            }
+            else {
+                board[r][c] = new JButton(null, bBishop);
+                board[r][c].addActionListener(listener);
+            }
         }
+
         if (model.pieceAt(r, c).type().equals("Queen")) {
-            board[r][c] = new JButton(null, wQueen);
-            board[r][c].addActionListener(listener);
+            if(model.pieceAt(r, c).player() == Player.WHITE) {
+                board[r][c] = new JButton(null, wQueen);
+                board[r][c].addActionListener(listener);
+            }
+            else {
+                board[r][c] = new JButton(null, bQueen);
+                board[r][c].addActionListener(listener);
+            }
         }
+
         if (model.pieceAt(r, c).type().equals("King")) {
-            board[r][c] = new JButton(null, wKing);
-            board[r][c].addActionListener(listener);
+            if(model.pieceAt(r, c).player() == Player.WHITE) {
+                board[r][c] = new JButton(null, wKing);
+                board[r][c].addActionListener(listener);
+            }
+            else {
+                board[r][c] = new JButton(null, bKing);
+                board[r][c].addActionListener(listener);
+            }
         }
     }
 
     private void createIcons() {
         // Sets the Image for white player pieces
-        wRook = new ImageIcon("wRook.png");
-        wBishop = new ImageIcon("wBishop.png");
-        wQueen = new ImageIcon("wQueen.png");
-        wKing = new ImageIcon("wKing.png");
-        wPawn = new ImageIcon("wPawn.png");
-        wKnight = new ImageIcon("wKnight.png");
+        wRook = new ImageIcon(getClass().getResource("wRook.png"));
+        wBishop = new ImageIcon(getClass().getResource("wBishop.png"));
+        wQueen = new ImageIcon(getClass().getResource("wQueen.png"));
+        wKing = new ImageIcon(getClass().getResource("wKing.png"));
+        wPawn = new ImageIcon(getClass().getResource("wPawn.png"));
+        wKnight = new ImageIcon(getClass().getResource("wKnight.png"));
+
+        bRook = new ImageIcon(getClass().getResource("bRook.png"));
+        bBishop = new ImageIcon(getClass().getResource("bBishop.png"));
+        bQueen = new ImageIcon(getClass().getResource("bQueen.png"));
+        bKing = new ImageIcon(getClass().getResource("bKing.png"));
+        bPawn = new ImageIcon(getClass().getResource("bPawn.png"));
+        bKnight = new ImageIcon(getClass().getResource("bKnight.png"));
     }
 
     // method that updates the board
@@ -105,8 +155,7 @@ public class ChessPanel extends JPanel {
             for (int c = 0; c < 8; c++)
                 if (model.pieceAt(r, c) == null)
                     board[r][c].setIcon(null);
-                else
-                if (model.pieceAt(r, c).player() == Player.WHITE) {
+                else if(model.pieceAt(r, c).player() == Player.WHITE) {
                     if (model.pieceAt(r, c).type().equals("Pawn"))
                         board[r][c].setIcon(wPawn);
 
@@ -124,11 +173,32 @@ public class ChessPanel extends JPanel {
 
                     if (model.pieceAt(r, c).type().equals("King"))
                         board[r][c].setIcon(wKing);
-
                 }
+                else if(model.pieceAt(r, c).player() == Player.BLACK) {
+                    if (model.pieceAt(r, c).type().equals("Pawn"))
+                        board[r][c].setIcon(bPawn);
+
+                    if (model.pieceAt(r, c).type().equals("Rook"))
+                        board[r][c].setIcon(bRook);
+
+                    if (model.pieceAt(r, c).type().equals("Knight"))
+                        board[r][c].setIcon(bKnight);
+
+                    if (model.pieceAt(r, c).type().equals("Bishop"))
+                        board[r][c].setIcon(bBishop);
+
+                    if (model.pieceAt(r, c).type().equals("Queen"))
+                        board[r][c].setIcon(bQueen);
+
+                    if (model.pieceAt(r, c).type().equals("King"))
+                        board[r][c].setIcon(bKing);
+                }
+
         }
         repaint();
     }
+
+
 
     // inner class that represents action listener for buttons
     private class listener implements ActionListener {
