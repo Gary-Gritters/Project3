@@ -1,3 +1,5 @@
+package p3;
+
 public interface IChessPiece {
     /**
      * Return the player that owns this piece.

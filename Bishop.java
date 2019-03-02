@@ -1,3 +1,5 @@
+package p3;
+
 public class Bishop extends ChessPiece {
 
     public Bishop(Player player) {

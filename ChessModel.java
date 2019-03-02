@@ -1,3 +1,5 @@
+package p3;
+
 public class ChessModel implements IChessModel {
     private IChessPiece[][] board;
     private Player player;

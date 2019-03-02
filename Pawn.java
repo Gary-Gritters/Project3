@@ -1,3 +1,5 @@
+package p3;
+
 public class Pawn extends ChessPiece {
 
     public Pawn(Player player) {

@@ -1,3 +1,5 @@
+package p3;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -133,19 +135,19 @@ public class ChessPanel extends JPanel {
 
     private void createIcons() {
         // Sets the Image for white player pieces
-        wRook = new ImageIcon(getClass().getResource("wRook.png"));
-        wBishop = new ImageIcon(getClass().getResource("wBishop.png"));
-        wQueen = new ImageIcon(getClass().getResource("wQueen.png"));
-        wKing = new ImageIcon(getClass().getResource("wKing.png"));
-        wPawn = new ImageIcon(getClass().getResource("wPawn.png"));
-        wKnight = new ImageIcon(getClass().getResource("wKnight.png"));
+        wRook = new ImageIcon(getClass().getResource("p3/wRook.png"));
+        wBishop = new ImageIcon(getClass().getResource("p3/wBishop.png"));
+        wQueen = new ImageIcon(getClass().getResource("p3/wQueen.png"));
+        wKing = new ImageIcon(getClass().getResource("p3/wKing.png"));
+        wPawn = new ImageIcon(getClass().getResource("p3/wPawn.png"));
+        wKnight = new ImageIcon(getClass().getResource("p3/wKnight.png"));
 
-        bRook = new ImageIcon(getClass().getResource("bRook.png"));
-        bBishop = new ImageIcon(getClass().getResource("bBishop.png"));
-        bQueen = new ImageIcon(getClass().getResource("bQueen.png"));
-        bKing = new ImageIcon(getClass().getResource("bKing.png"));
-        bPawn = new ImageIcon(getClass().getResource("bPawn.png"));
-        bKnight = new ImageIcon(getClass().getResource("bKnight.png"));
+        bRook = new ImageIcon(getClass().getResource("p3/bRook.png"));
+        bBishop = new ImageIcon(getClass().getResource("p3/bBishop.png"));
+        bQueen = new ImageIcon(getClass().getResource("p3/bQueen.png"));
+        bKing = new ImageIcon(getClass().getResource("p3/bKing.png"));
+        bPawn = new ImageIcon(getClass().getResource("p3/bPawn.png"));
+        bKnight = new ImageIcon(getClass().getResource("p3/bKnight.png"));
     }
 
     // method that updates the board

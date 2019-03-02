@@ -1,3 +1,5 @@
+package p3;
+
 public enum Player {
     BLACK, WHITE;
 

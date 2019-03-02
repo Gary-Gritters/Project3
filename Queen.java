@@ -1,3 +1,5 @@
+package p3;
+
 public class Queen extends ChessPiece {
 
     public Queen(Player player) {
