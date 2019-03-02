@@ -7,7 +7,7 @@ public class Pawn extends ChessPiece {
     }
 
     public String type() {
-        return "Pawn";
+        return "p3.Pawn";
     }
 
     // determines if the move is valid for a pawn piece

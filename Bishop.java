@@ -7,7 +7,7 @@ public class Bishop extends ChessPiece {
     }
 
     public String type() {
-        return "Bishop";
+        return "p3.Bishop";
     }
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {

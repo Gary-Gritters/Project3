@@ -103,10 +103,10 @@ public class ChessModel implements IChessModel {
          *		ii. Perhaps you have won the game.
          *
          *c. Determine if any of your pieces are in danger,
-         *		i. Move them if you can.
+         *		i. p3.Move them if you can.
          *		ii. Attempt to protect that piece.
          *
-         *d. Move a piece (pawns first) forward toward opponent king
+         *d. p3.Move a piece (pawns first) forward toward opponent king
          *		i. check to see if that piece is in danger of being removed, if so, move a different piece.
          */
 

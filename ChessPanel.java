@@ -66,7 +66,7 @@ public class ChessPanel extends JPanel {
 
     private void placePieces(int r, int c) {
 
-        if (model.pieceAt(r, c).type().equals("Pawn")) {
+        if (model.pieceAt(r, c).type().equals("p3.Pawn")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wPawn);
                 board[r][c].addActionListener(listener);
@@ -77,7 +77,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
-        if (model.pieceAt(r, c).type().equals("Rook")) {
+        if (model.pieceAt(r, c).type().equals("p3.Rook")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wRook);
                 board[r][c].addActionListener(listener);
@@ -88,7 +88,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
-        if (model.pieceAt(r, c).type().equals("Knight")) {
+        if (model.pieceAt(r, c).type().equals("p3.Knight")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wKnight);
                 board[r][c].addActionListener(listener);
@@ -99,7 +99,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
-        if (model.pieceAt(r, c).type().equals("Bishop")) {
+        if (model.pieceAt(r, c).type().equals("p3.Bishop")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wBishop);
                 board[r][c].addActionListener(listener);
@@ -110,7 +110,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
-        if (model.pieceAt(r, c).type().equals("Queen")) {
+        if (model.pieceAt(r, c).type().equals("p3.Queen")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wQueen);
                 board[r][c].addActionListener(listener);
@@ -121,7 +121,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
-        if (model.pieceAt(r, c).type().equals("King")) {
+        if (model.pieceAt(r, c).type().equals("p3.King")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wKing);
                 board[r][c].addActionListener(listener);
@@ -135,19 +135,19 @@ public class ChessPanel extends JPanel {
 
     private void createIcons() {
         // Sets the Image for white player pieces
-        wRook = new ImageIcon(getClass().getResource("p3/wRook.png"));
-        wBishop = new ImageIcon(getClass().getResource("p3/wBishop.png"));
-        wQueen = new ImageIcon(getClass().getResource("p3/wQueen.png"));
-        wKing = new ImageIcon(getClass().getResource("p3/wKing.png"));
-        wPawn = new ImageIcon(getClass().getResource("p3/wPawn.png"));
-        wKnight = new ImageIcon(getClass().getResource("p3/wKnight.png"));
+        wRook = new ImageIcon(getClass().getResource("/p3/wRook.png"));
+        wBishop = new ImageIcon(getClass().getResource("/p3/wBishop.png"));
+        wQueen = new ImageIcon(getClass().getResource("/p3/wQueen.png"));
+        wKing = new ImageIcon(getClass().getResource("/p3/wKing.png"));
+        wPawn = new ImageIcon(getClass().getResource("/p3/wPawn.png"));
+        wKnight = new ImageIcon(getClass().getResource("/p3/wKnight.png"));
 
-        bRook = new ImageIcon(getClass().getResource("p3/bRook.png"));
-        bBishop = new ImageIcon(getClass().getResource("p3/bBishop.png"));
-        bQueen = new ImageIcon(getClass().getResource("p3/bQueen.png"));
-        bKing = new ImageIcon(getClass().getResource("p3/bKing.png"));
-        bPawn = new ImageIcon(getClass().getResource("p3/bPawn.png"));
-        bKnight = new ImageIcon(getClass().getResource("p3/bKnight.png"));
+        bRook = new ImageIcon(getClass().getResource("/p3/bRook.png"));
+        bBishop = new ImageIcon(getClass().getResource("/p3/bBishop.png"));
+        bQueen = new ImageIcon(getClass().getResource("/p3/bQueen.png"));
+        bKing = new ImageIcon(getClass().getResource("/p3/bKing.png"));
+        bPawn = new ImageIcon(getClass().getResource("/p3/bPawn.png"));
+        bKnight = new ImageIcon(getClass().getResource("/p3/bKnight.png"));
     }
 
     // method that updates the board
@@ -158,41 +158,41 @@ public class ChessPanel extends JPanel {
                 if (model.pieceAt(r, c) == null)
                     board[r][c].setIcon(null);
                 else if(model.pieceAt(r, c).player() == Player.WHITE) {
-                    if (model.pieceAt(r, c).type().equals("Pawn"))
+                    if (model.pieceAt(r, c).type().equals("p3.Pawn"))
                         board[r][c].setIcon(wPawn);
 
-                    if (model.pieceAt(r, c).type().equals("Rook"))
+                    if (model.pieceAt(r, c).type().equals("p3.Rook"))
                         board[r][c].setIcon(wRook);
 
-                    if (model.pieceAt(r, c).type().equals("Knight"))
+                    if (model.pieceAt(r, c).type().equals("p3.Knight"))
                         board[r][c].setIcon(wKnight);
 
-                    if (model.pieceAt(r, c).type().equals("Bishop"))
+                    if (model.pieceAt(r, c).type().equals("p3.Bishop"))
                         board[r][c].setIcon(wBishop);
 
-                    if (model.pieceAt(r, c).type().equals("Queen"))
+                    if (model.pieceAt(r, c).type().equals("p3.Queen"))
                         board[r][c].setIcon(wQueen);
 
-                    if (model.pieceAt(r, c).type().equals("King"))
+                    if (model.pieceAt(r, c).type().equals("p3.King"))
                         board[r][c].setIcon(wKing);
                 }
                 else if(model.pieceAt(r, c).player() == Player.BLACK) {
-                    if (model.pieceAt(r, c).type().equals("Pawn"))
+                    if (model.pieceAt(r, c).type().equals("p3.Pawn"))
                         board[r][c].setIcon(bPawn);
 
-                    if (model.pieceAt(r, c).type().equals("Rook"))
+                    if (model.pieceAt(r, c).type().equals("p3.Rook"))
                         board[r][c].setIcon(bRook);
 
-                    if (model.pieceAt(r, c).type().equals("Knight"))
+                    if (model.pieceAt(r, c).type().equals("p3.Knight"))
                         board[r][c].setIcon(bKnight);
 
-                    if (model.pieceAt(r, c).type().equals("Bishop"))
+                    if (model.pieceAt(r, c).type().equals("p3.Bishop"))
                         board[r][c].setIcon(bBishop);
 
-                    if (model.pieceAt(r, c).type().equals("Queen"))
+                    if (model.pieceAt(r, c).type().equals("p3.Queen"))
                         board[r][c].setIcon(bQueen);
 
-                    if (model.pieceAt(r, c).type().equals("King"))
+                    if (model.pieceAt(r, c).type().equals("p3.King"))
                         board[r][c].setIcon(bKing);
                 }
 

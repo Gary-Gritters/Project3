@@ -10,7 +10,7 @@ public class Rook extends ChessPiece {
 
     public String type() {
 
-        return "Rook";
+        return "p3.Rook";
 
     }
 

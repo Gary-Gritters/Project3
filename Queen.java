@@ -8,7 +8,7 @@ public class Queen extends ChessPiece {
     }
 
     public String type() {
-        return "Queen";
+        return "p3.Queen";
 
     }
 

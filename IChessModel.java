@@ -33,7 +33,7 @@ public interface IChessModel {
     /**
      * Report whether the current player p is in check.
      *
-     * @param p {@link W18project3.Move} the Player being checked
+     * @param p {@link W18project3.Move} the p3.Player being checked
      * @return {@code true} if the current player is in check, {@code false} otherwise.
      */
     boolean inCheck(Player p);
