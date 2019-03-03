@@ -12,8 +12,88 @@ public class Bishop extends ChessPiece {
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {
 
-        return true;
-        // More code is needed
+        boolean valid = true;
+        
+        int rowChange = move.toRow - move.fromRow;
+        int colChange = move.toColumn - move.fromColumn;
+
+        int rowChangeABS;
+        int colChangeABS;
+
+        // Finds absolute value of row change
+        if(rowChange < 0){
+            rowChangeABS = -rowChange;
+        }
+        else rowChangeABS = rowChange;
+
+        // Finds absolute value of col change
+        if(colChange < 0){
+            colChangeABS = -colChange;
+        }
+        else colChangeABS = colChange;
+
+        if(rowChangeABS != colChangeABS){
+            valid = false;
+        }
+
+        // Checks for pieces in down right path
+        if(rowChange > 0 && colChange > 0) {
+            int pathlength = move.toRow - move.fromRow;
+
+            for (int i = 1; i < pathlength; i++) {
+                if (board[move.fromRow + i][move.fromColumn + i] != null) {
+                    valid = false;
+                }
+            }
+        }
+
+        // Checks for pieces in up right path
+        if(rowChange < 0 && colChange > 0) {
+            int pathlength =  move.fromRow - move.toRow;
+
+            for (int i = 1; i < pathlength; i++) {
+                if (board[move.fromRow - i][move.fromColumn + i] != null) {
+                    valid = false;
+                }
+            }
+        }
+
+        // Checks for pieces in down left path
+        if(rowChange > 0 && colChange < 0) {
+            int pathlength = move.toRow - move.fromRow;
+
+            for (int i = 1; i < pathlength; i++) {
+                if (board[move.fromRow + i][move.fromColumn - i] != null) {
+                    valid = false;
+                }
+            }
+        }
+
+        // Checks for pieces in up left path
+        if(rowChange < 0 && colChange < 0) {
+            int pathlength = move.fromRow - move.toRow;
+
+            for (int i = 1; i < pathlength; i++) {
+                if (board[move.fromRow - i][move.fromColumn - i] != null) {
+                    valid = false;
+                }
+            }
+        }
+
+        // Prevents capturing same color pieces
+        if (board[move.toRow][move.toColumn] != null) {
+            if (board[move.toRow][move.toColumn].player() == board[move.fromRow][move.fromColumn].player()) {
+                valid = false;
+            }
+        }
+
+        // Prevents non-diagonal movements
+        if(move.fromRow == move.toRow || move.fromColumn == move.toColumn){
+            valid = false;
+        }
+
+        return valid;
+
 
     }
 }
