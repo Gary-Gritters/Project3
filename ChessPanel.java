@@ -235,6 +235,7 @@ public class ChessPanel extends JPanel {
 
                             if ((model.isValidMove(m)) == true) {
                                 model.move(m);
+                                model.setNextPlayer();
                             }
 
                             // Resets selected background

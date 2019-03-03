@@ -39,6 +39,8 @@ public class ChessModel implements IChessModel {
         for (int i = 0; i < 8; i++) {
             board[1][i] = new Pawn(Player.BLACK);
         }
+
+        player = Player.WHITE;
     }
 
 
@@ -52,7 +54,8 @@ public class ChessModel implements IChessModel {
 
         if (board[move.fromRow][move.fromColumn] != null)
             if (board[move.fromRow][move.fromColumn].isValidMove(move, board) == true)
-                return true;
+                if(board[move.fromRow][move.fromColumn].player()==player)
+                    return true;
 
         return valid;
     }

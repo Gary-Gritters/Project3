@@ -14,10 +14,27 @@ public class Pawn extends ChessPiece {
     // determines if the move is valid for a pawn piece
     public boolean isValidMove(Move move, IChessPiece[][] board) {
         boolean valid = true;
-        int pathLength = move.fromRow - move.toRow;
-
         boolean homerow = false;
 
+        int colChangeABS;
+        int rowChangeABS;
+
+        int rowChange = move.fromRow - move.toRow;
+        int colChange = move.toColumn - move.fromColumn;
+
+        // Calculates ABS of colChange
+        if(colChange < 0){
+            colChangeABS = -colChange;
+        }
+        else colChangeABS = colChange;
+
+        // Calculates ABS of rowChange
+        if(rowChange < 0){
+            rowChangeABS = -rowChange;
+        }
+        else rowChangeABS = rowChange;
+
+        // Sets homerow for each pawn color
         if(board[move.fromRow][move.fromColumn].player()==Player.BLACK){
             if(move.fromRow == 1){
                 homerow = true;
@@ -50,43 +67,54 @@ public class Pawn extends ChessPiece {
             }
         }
 
+        // Prevents capture when 2 spaces are moved
+        if(rowChangeABS == 2 && colChangeABS != 0){
+            valid = false;
+        }
+
         // Cases where destination cell is populated
         if (board[move.toRow][move.toColumn] != null) {
+
+            // Prevents more that one horizontal movement
+            if(colChangeABS != 1){
+                valid = false;
+            }
 
             // Prevents capturing same color pieces
             if (board[move.toRow][move.toColumn].player() == board[move.fromRow][move.fromColumn].player()) {
                 valid = false;
             }
+
             //Prevents capturing pieces directly ahead
             if(move.toColumn == move.fromColumn){
                 valid = false;
             }
         }
 
-
-        // Prevents white pawns moving down
+        // Prevents white from pawns moving down
         if(board[move.fromRow][move.fromColumn].player()
-                == Player.WHITE && pathLength < 0){
+                == Player.WHITE && rowChange < 0){
             valid = false;
         }
 
-        // Prevents white pawns moving up
+        // Prevents black from pawns moving up
         if(board[move.fromRow][move.fromColumn].player()
-                == Player.BLACK && pathLength > 0){
+                == Player.BLACK && rowChange > 0){
             valid = false;
         }
 
         // Absolute value of path Length
-        if(pathLength < 0){
-            pathLength = -pathLength;
+        if(rowChange < 0){
+            rowChange = -rowChange;
         }
 
         // Prevents moving more than 2 spaces
-        if(pathLength > 2){
+        if(rowChange > 2){
             valid = false;
         }
-        // Prevents moving 2 unless on first move
-        else if(pathLength == 2 && !homerow){
+
+        // Prevents moving 2 unless on homerow
+        else if(rowChange == 2 && !homerow){
             valid = false;
         }
 
@@ -101,7 +129,6 @@ public class Pawn extends ChessPiece {
                 valid = false;
             }
         }
-
 
         return valid;
     }
