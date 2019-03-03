@@ -37,6 +37,10 @@ public class Knight extends ChessPiece {
             valid = false;
         }
 
+        if(colChangeABS == 3 || rowChangeABS == 3){
+            valid = false;
+        }
+
         // Checks the piece total move distance is 3 squares
         if((rowChangeABS + colChangeABS) != 3){
             valid = false;

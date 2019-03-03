@@ -216,6 +216,17 @@ public class ChessPanel extends JPanel {
                             // Sets back ground of selected tile
                             board[r][c].setBackground(Color.GREEN);
 
+                            // Piece movement diagnostic
+                            for (int rr = 0; rr < model.numRows(); rr++) {
+                                for (int cc = 0; cc < model.numColumns(); cc++) {
+                                    Move m = new Move(r, c, rr,cc);
+
+                                    if(model.isValidMove(m)){
+                                        board[rr][cc].setBackground(Color.BLUE);
+                                    }
+                                }
+                                }
+
                         } else {
                             toRow = r;
                             toCol = c;
@@ -228,6 +239,15 @@ public class ChessPanel extends JPanel {
 
                             // Resets selected background
                             setBackGroundColor(fromRow,fromCol);
+
+
+                            // Piece movement diagnostic
+                            for (int rr = 0; rr < model.numRows(); rr++) {
+                                for (int cc = 0; cc < model.numColumns(); cc++) {
+                                    setBackGroundColor(rr,cc);
+                                }
+                                }
+
                             displayBoard();
                         }
         }

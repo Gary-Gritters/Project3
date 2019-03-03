@@ -2,7 +2,6 @@ package p3;
 
 public class Pawn extends ChessPiece {
 
-    private boolean firstMove = true;
 
     public Pawn(Player player) {
         super(player);
@@ -16,6 +15,19 @@ public class Pawn extends ChessPiece {
     public boolean isValidMove(Move move, IChessPiece[][] board) {
         boolean valid = true;
         int pathLength = move.fromRow - move.toRow;
+
+        boolean homerow = false;
+
+        if(board[move.fromRow][move.fromColumn].player()==Player.BLACK){
+            if(move.fromRow == 1){
+                homerow = true;
+            }
+        }
+        else{
+            if(move.fromRow == 6){
+                homerow = true;
+            }
+        }
 
         // Prevents movement through other pieces vertically
         if(move.fromRow != move.toRow){
@@ -74,7 +86,7 @@ public class Pawn extends ChessPiece {
             valid = false;
         }
         // Prevents moving 2 unless on first move
-        else if(pathLength == 2 && !firstMove){
+        else if(pathLength == 2 && !homerow){
             valid = false;
         }
 
@@ -90,10 +102,7 @@ public class Pawn extends ChessPiece {
             }
         }
 
-        // Must be right before return, tracks first move
-        if(valid){
-            firstMove = false;
-        }
+
         return valid;
     }
 }

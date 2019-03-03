@@ -83,6 +83,10 @@ public class Rook extends ChessPiece {
 
 
         }
+        // Prevents capturing itself
+        if ((move.fromRow == move.toRow) && (move.fromColumn == move.toColumn)) {
+            valid = false;
+        }
 
 
         return valid;

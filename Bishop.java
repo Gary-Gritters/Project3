@@ -36,8 +36,17 @@ public class Bishop extends ChessPiece {
             valid = false;
         }
 
+        // Prevents non-diagonal movements
+        if(move.fromRow == move.toRow || move.fromColumn == move.toColumn){
+            valid = false;
+        }
+
+        if(colChangeABS != rowChangeABS){
+            valid = false;
+        }
+
         // Checks for pieces in down right path
-        if(rowChange > 0 && colChange > 0) {
+        else if(rowChange > 0 && colChange > 0) {
             int pathlength = move.toRow - move.fromRow;
 
             for (int i = 1; i < pathlength; i++) {
@@ -48,7 +57,7 @@ public class Bishop extends ChessPiece {
         }
 
         // Checks for pieces in up right path
-        if(rowChange < 0 && colChange > 0) {
+        else if(rowChange < 0 && colChange > 0) {
             int pathlength =  move.fromRow - move.toRow;
 
             for (int i = 1; i < pathlength; i++) {
@@ -59,7 +68,7 @@ public class Bishop extends ChessPiece {
         }
 
         // Checks for pieces in down left path
-        if(rowChange > 0 && colChange < 0) {
+        else if(rowChange > 0 && colChange < 0) {
             int pathlength = move.toRow - move.fromRow;
 
             for (int i = 1; i < pathlength; i++) {
@@ -70,7 +79,7 @@ public class Bishop extends ChessPiece {
         }
 
         // Checks for pieces in up left path
-        if(rowChange < 0 && colChange < 0) {
+        else if(rowChange < 0 && colChange < 0) {
             int pathlength = move.fromRow - move.toRow;
 
             for (int i = 1; i < pathlength; i++) {
@@ -87,10 +96,7 @@ public class Bishop extends ChessPiece {
             }
         }
 
-        // Prevents non-diagonal movements
-        if(move.fromRow == move.toRow || move.fromColumn == move.toColumn){
-            valid = false;
-        }
+
 
         return valid;
 
