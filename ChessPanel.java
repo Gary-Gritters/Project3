@@ -19,7 +19,7 @@ public class ChessPanel extends JPanel {
     private int toRow;
     private int fromCol;
     private int toCol;
-    // declare other intance variables as needed
+    // declare other instance variables as needed
 
     private listener listener;
 
@@ -212,15 +212,23 @@ public class ChessPanel extends JPanel {
                             fromRow = r;
                             fromCol = c;
                             firstTurnFlag = false;
+
+                            // Sets back ground of selected tile
+                            board[r][c].setBackground(Color.GREEN);
+
                         } else {
                             toRow = r;
                             toCol = c;
                             firstTurnFlag = true;
                             Move m = new Move(fromRow, fromCol, toRow, toCol);
+
                             if ((model.isValidMove(m)) == true) {
                                 model.move(m);
-                                displayBoard();
                             }
+
+                            // Resets selected background
+                            setBackGroundColor(fromRow,fromCol);
+                            displayBoard();
                         }
         }
     }

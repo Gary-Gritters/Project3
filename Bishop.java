@@ -13,7 +13,7 @@ public class Bishop extends ChessPiece {
     public boolean isValidMove(Move move, IChessPiece[][] board) {
 
         boolean valid = true;
-        
+
         int rowChange = move.toRow - move.fromRow;
         int colChange = move.toColumn - move.fromColumn;
 
