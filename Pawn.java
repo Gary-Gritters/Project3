@@ -57,6 +57,7 @@ public class Pawn extends ChessPiece {
                     }
                 }
             }
+            
             // Checks path from low from row to high to row
             if(move.fromRow < move.toRow){
                 for(int i = move.fromRow + 1; i < move.toRow; i++){
@@ -76,7 +77,7 @@ public class Pawn extends ChessPiece {
         if (board[move.toRow][move.toColumn] != null) {
 
             // Prevents more that one horizontal movement
-            if(colChangeABS != 1){
+            if(colChangeABS != 1 || rowChangeABS == 0){
                 valid = false;
             }
 
