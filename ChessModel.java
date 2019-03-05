@@ -1,14 +1,25 @@
 package p3;
 
+import java.util.Stack;
+
 public class ChessModel implements IChessModel {
     private IChessPiece[][] board;
     private Player player;
+
+    // Tracks all previous moves performed
+    private Stack<Move> prevMoves;
+
+    // Tracks when pieces are captured
+    private Stack<IChessPiece> captureHistory;
 
     // declare other instance variables as needed
 
     public ChessModel() {
         board = new IChessPiece[8][8];
         player = Player.WHITE;
+
+        prevMoves = new Stack<>();
+        captureHistory = new Stack<>();
 
         board[7][0] = new Rook(Player.WHITE);
         board[7][1] = new Knight(Player.WHITE);
@@ -20,7 +31,7 @@ public class ChessModel implements IChessModel {
         board[7][7] = new Rook(Player.WHITE);
 
         // Places white pawns
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < numColumns(); i++) {
             board[6][i] = new Pawn(Player.WHITE);
         }
 
@@ -36,7 +47,7 @@ public class ChessModel implements IChessModel {
         board[0][7] = new Rook(Player.BLACK);
 
         // Places black pawns
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < numColumns(); i++) {
             board[1][i] = new Pawn(Player.BLACK);
         }
 
@@ -60,12 +71,39 @@ public class ChessModel implements IChessModel {
         return valid;
     }
 
+    public Boolean prevMoveExisits(){
+        return prevMoves.size() != 0;
+    }
+
+    public void undo(){
+        // If a previous move exists
+        if(prevMoves.size() > 0){
+
+            // Retrieves previous move from stack
+            Move prevMove = prevMoves.pop();
+            board[prevMove.fromRow][prevMove.fromColumn]= board[prevMove.toRow][prevMove.toColumn];
+
+            // Retrieves and places replaced piece
+            board[prevMove.toRow][prevMove.toColumn] = captureHistory.pop();
+        }
+    }
+
     public void move(Move move) {
+        if(board[move.toRow][move.toColumn] != null){
+            captureHistory.push(board[move.toRow][move.toColumn]);
+        }
+        else{
+            captureHistory.push(null);
+        }
+        prevMoves.push(move);
+
         board[move.toRow][move.toColumn] = board[move.fromRow][move.fromColumn];
         board[move.fromRow][move.fromColumn] = null;
+
     }
 
     public boolean inCheck(Player p) {
+
         boolean valid = false;
         return valid;
     }

@@ -8,7 +8,10 @@ import java.awt.event.ActionListener;
 public class ChessPanel extends JPanel {
 
     private JButton[][] board;
+    private JButton undo;
     private ChessModel model;
+
+
 
     private ImageIcon wRook, wBishop, wQueen, wKing, wPawn, wKnight;
     private ImageIcon bRook, bBishop, bQueen, bKing, bPawn, bKnight;
@@ -22,11 +25,14 @@ public class ChessPanel extends JPanel {
     // declare other instance variables as needed
 
     private listener listener;
+    private undoListener undoListener;
 
     public ChessPanel() {
+
         model = new ChessModel();
         board = new JButton[model.numRows()][model.numColumns()];
         listener = new listener();
+        undoListener = new undoListener();
         createIcons();
 
         JPanel boardpanel = new JPanel();
@@ -50,7 +56,11 @@ public class ChessPanel extends JPanel {
         }
         add(boardpanel, BorderLayout.WEST);
         boardpanel.setPreferredSize(new Dimension(600, 600));
-        add(buttonpanel);
+        add(buttonpanel, BorderLayout.SOUTH);
+
+        undo = new JButton("Undo");
+        undo.addActionListener(undoListener);
+        buttonpanel.add(undo);
         firstTurnFlag = true;
 
 
@@ -200,11 +210,32 @@ public class ChessPanel extends JPanel {
         repaint();
     }
 
+    private class undoListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            if(undo == event.getSource()){
+
+                if(model.prevMoveExisits()){
+                    // Undoes the previous move
+                    model.undo();
+
+                    // Toggles Players
+                    model.setNextPlayer();
+
+                    displayBoard();
+                }
+
+            }
+
+        }
+    }
+
 
 
     // inner class that represents action listener for buttons
     private class listener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+
+
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
                     if (board[r][c] == event.getSource())
