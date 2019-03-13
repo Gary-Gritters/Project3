@@ -1,4 +1,4 @@
-package p3;
+
 
 public class King extends ChessPiece {
 
@@ -45,6 +45,21 @@ public class King extends ChessPiece {
         if (board[move.toRow][move.toColumn] != null) {
             if (board[move.toRow][move.toColumn].player() == board[move.fromRow][move.fromColumn].player()) {
                 valid = false;
+            }
+        }
+
+        for(int r = 0; r < 8; r++){
+            for(int c = 0; c < 8; c++){
+                if(board[r][c] != null) {
+                    if (board[r][c].player() != board[move.fromRow][move.fromColumn].player()) {
+
+                        Move opponentMove = new Move(r,c, move.toRow, move.toColumn);
+
+                        if (!board[r][c].type().equals("p3.King") && board[r][c].isValidMove(opponentMove, board)) {
+                            valid = false;
+                        }
+                    }
+                }
             }
         }
 

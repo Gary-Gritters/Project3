@@ -1,4 +1,4 @@
-package p3;
+
 
 import java.util.Stack;
 
@@ -102,11 +102,32 @@ public class ChessModel implements IChessModel {
 
     }
 
-    public boolean inCheck(Player p) {
+    public boolean inCheck(Player p){return false;}
+   /*public boolean inCheck(Player p) {
+        int kingPosR;
+        int kingPosC;
+        // find king first
+        for(int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                if(board[r][c].type().equals("p3.King"));
+            }
+        }
+
+         Move test = new Move(r,c, move.toRow, move.toColumn);
+
+                if(board[r][c] != null) {
+                    if (board[r][c].player() != board[move.fromRow][move.fromColumn].player()) {
+                        if (!board[r][c].type().equals("p3.king") && board[r][c].isValidMove(test, board)) {
+                            valid = false;
+                        }
+                    }
+                }
+            }
+        }
 
         boolean valid = false;
         return valid;
-    }
+    }*/
 
 
     public Player currentPlayer() {
