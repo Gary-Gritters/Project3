@@ -1,4 +1,3 @@
-package p3;
 
 public abstract class ChessPiece implements IChessPiece {
 
@@ -24,4 +23,6 @@ public abstract class ChessPiece implements IChessPiece {
 
         return false;
     }
+
+
 }

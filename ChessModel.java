@@ -1,10 +1,11 @@
-package p3;
+
 
 import java.util.Stack;
 
 public class ChessModel implements IChessModel {
     private IChessPiece[][] board;
     private Player player;
+    private GUIcodes status;
 
     // Tracks all previous moves performed
     private Stack<Move> prevMoves;
@@ -15,6 +16,7 @@ public class ChessModel implements IChessModel {
     // declare other instance variables as needed
 
     public ChessModel() {
+        status = GUIcodes.NoMessage;
         board = new IChessPiece[8][8];
         player = Player.WHITE;
 
@@ -57,6 +59,10 @@ public class ChessModel implements IChessModel {
 
     public boolean isComplete() {
         boolean valid = false;
+        inCheck(currentPlayer());
+        // Depend on isValid?
+        //***** Move every piece with logic, if any move of the player gets you out of check, not checkmate*****
+        // Use inCheck and theoretical moves to check for it.
         return valid;
     }
 
@@ -99,15 +105,48 @@ public class ChessModel implements IChessModel {
 
         board[move.toRow][move.toColumn] = board[move.fromRow][move.fromColumn];
         board[move.fromRow][move.fromColumn] = null;
+        //undoCheck();
 
     }
 
-    public boolean inCheck(Player p) {
 
-        boolean valid = false;
-        return valid;
+    public boolean inCheck(Player p){
+
+        int kingPosR = 0;
+        int kingPosC = 0;
+        for(int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                if (board[r][c] != null && board[r][c].type().equals("p3.King") && board[r][c].player() == p) {
+                    kingPosR = r;
+                    kingPosC = c;
+                }
+            }
+        }
+
+        for(int r = 0; r < 8; r++){
+            for(int c = 0; c < 8; c++){
+                if(board[r][c] != null) {
+                    if (board[r][c].player() != p) {
+                        Move opponentMove = new Move(r,c, kingPosR, kingPosC);
+                        if(board[r][c].isValidMove(opponentMove, board)) {
+                            return true;
+                        }
+                        //board[move.toRow][move.toColumn] = board2[0];
+                    }
+                }
+
+            }
+        }
+        return false;
     }
 
+    public void undoCheck(){
+        if (inCheck(currentPlayer())){
+            undo();
+            setNextPlayer();
+            //System.out.println("lol dun goofed");
+        }
+    }
 
     public Player currentPlayer() {
         return player;

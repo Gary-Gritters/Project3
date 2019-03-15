@@ -1,4 +1,4 @@
-package p3;
+
 
 public class Bishop extends ChessPiece {
 

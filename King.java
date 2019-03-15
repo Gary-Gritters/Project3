@@ -1,4 +1,3 @@
-package p3;
 
 public class King extends ChessPiece {
 
@@ -48,6 +47,31 @@ public class King extends ChessPiece {
             }
         }
 
+        //IChessPiece[][] board2 = new IChessPiece[8][8];
+
+        /*
+        for(int r = 0; r < 8; r++){
+            for(int c = 0; c < 8; c++){
+                board2[r][c] = board[r][c];
+            }
+        }
+        for(int r = 0; r < 8; r++){
+            for(int c = 0; c < 8; c++){
+                if(board[r][c] != null) {
+                    if (board[r][c].player() != board[move.fromRow][move.fromColumn].player()) {
+                        Move opponentMove = new Move(r,c, move.toRow, move.toColumn);
+
+                        board2[move.toRow][move.toColumn] = null;
+                        if (!board[r][c].type().equals("p3.King") && board2[r][c] != null && board2[r][c].isValidMove(opponentMove, board)) {
+                            valid = false;
+                        }
+                        //board[move.toRow][move.toColumn] = board2[0];
+                    }
+                }
+
+            }
+        }
+        */
         return valid;
     }
 }
