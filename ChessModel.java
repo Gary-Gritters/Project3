@@ -1,4 +1,4 @@
-
+package p3;
 
 import java.util.Stack;
 
@@ -59,11 +59,38 @@ public class ChessModel implements IChessModel {
 
     public boolean isComplete() {
         boolean valid = false;
-        inCheck(currentPlayer());
-        // Depend on isValid?
-        //***** Move every piece with logic, if any move of the player gets you out of check, not checkmate*****
-        // Use inCheck and theoretical moves to check for it.
-        return valid;
+
+        if(!inCheck(currentPlayer())){
+            return false;
+        }
+
+        for(int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                if(board[r][c] != null) {
+                    if (board[r][c].player() == currentPlayer()) {
+
+                        for (int rr = 0; rr < 8; rr++) {
+                            for (int cc = 0; cc < 8; cc++) {
+
+                                Move theoMove = new Move(r, c, rr, cc);
+                                if (board[r][c].isValidMove(theoMove, board)) {
+                                    move(theoMove);
+
+                                    if (!inCheck(currentPlayer())) {
+                                        undo();
+                                        return false;
+                                    }
+
+                                    undo();
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public boolean isValidMove(Move move) {
