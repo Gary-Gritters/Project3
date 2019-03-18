@@ -1,3 +1,4 @@
+package p3;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,9 +7,10 @@ import java.awt.event.ActionListener;
 
 
 /*
- * CheckMate
- * En Passant
- * Castling
+ * Initial condition stack before piece moves
+ *      En Passant
+ *      Castling
+ *
  * Promotion
  * AI
  * JUnits
@@ -276,6 +278,10 @@ public class ChessPanel extends JPanel {
                                 model.move(m);
                                 model.undoCheck();
                                 model.setNextPlayer();
+
+                                if(model.isComplete()) {
+                                    JOptionPane.showInputDialog(null, "This is the message", "Checkmate!");
+                                }
                             }
 
                             // Resets selected background

@@ -1,5 +1,6 @@
 package p3;
 
+
 import java.util.Stack;
 
 public class ChessModel implements IChessModel {
@@ -12,6 +13,8 @@ public class ChessModel implements IChessModel {
 
     // Tracks when pieces are captured
     private Stack<IChessPiece> captureHistory;
+
+    private Stack<IChessPiece> initialCondition;
 
     // declare other instance variables as needed
 
