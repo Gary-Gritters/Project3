@@ -1,10 +1,12 @@
-package p3;
 
 public class Queen extends ChessPiece {
+
+    Integer moveCount;
 
     public Queen(Player player) {
         super(player);
 
+        moveCount = 0;
     }
 
     public String type() {
@@ -12,14 +14,12 @@ public class Queen extends ChessPiece {
 
     }
 
-    boolean isFirstMove = true;
-
-    public void setFirstMove(boolean firstMoveState){
-        isFirstMove = firstMoveState;
+    public void changeMoveCount(int i){
+        moveCount += i;
     }
 
-    public boolean getFirstCond(){
-        return isFirstMove;
+    public Integer getMoveCount(){
+        return moveCount;
     }
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {

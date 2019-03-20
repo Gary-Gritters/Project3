@@ -1,10 +1,11 @@
-package p3;
-
 public class Rook extends ChessPiece {
+
+    Integer moveCount;
 
     public Rook(Player player) {
 
         super(player);
+        moveCount = 0;
 
     }
 
@@ -14,14 +15,12 @@ public class Rook extends ChessPiece {
 
     }
 
-    boolean isFirstMove = true;
-
-    public void setFirstMove(boolean firstMoveState){
-        isFirstMove = firstMoveState;
+    public void changeMoveCount(int i){
+        moveCount += i;
     }
 
-    public boolean getFirstCond(){
-        return isFirstMove;
+    public Integer getMoveCount(){
+        return moveCount;
     }
 
     // determines if the move is valid for a rook piece
@@ -88,10 +87,7 @@ public class Rook extends ChessPiece {
                         }
                     }
                 }
-
             }
-
-
         }
         // Prevents capturing itself
         if ((move.fromRow == move.toRow) && (move.fromColumn == move.toColumn)) {

@@ -1,26 +1,24 @@
-package p3;
-
 
 
 public class Pawn extends ChessPiece {
-    boolean isFirstMove;
+
+    Integer moveCount;
 
     public Pawn(Player player) {
         super(player);
-        isFirstMove = true;
+        moveCount = 0;
     }
 
     public String type() {
         return "p3.Pawn";
     }
 
-
-    public void setFirstMove(boolean firstMoveState){
-        isFirstMove = firstMoveState;
+    public void changeMoveCount(int i){
+        moveCount += i;
     }
 
-    public boolean getFirstCond(){
-        return isFirstMove;
+    public Integer getMoveCount(){
+        return moveCount;
     }
 
     // determines if the move is valid for a pawn piece

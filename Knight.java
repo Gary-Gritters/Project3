@@ -1,24 +1,23 @@
-package p3;
-
-
 public class Knight extends ChessPiece {
+
+    Integer moveCount;
 
     public Knight(Player player) {
         super(player);
+        moveCount = 0;
     }
 
     public String type() {
         return "p3.Knight";
     }
 
-    boolean isFirstMove = true;
 
-    public void setFirstMove(boolean firstMoveState){
-        isFirstMove = firstMoveState;
+    public void changeMoveCount(int i){
+        moveCount += i;
     }
 
-    public boolean getFirstCond(){
-        return isFirstMove;
+    public Integer getMoveCount(){
+        return moveCount;
     }
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {

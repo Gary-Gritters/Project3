@@ -1,4 +1,3 @@
-package p3;
 
 public interface IChessPiece {
     /**
@@ -36,7 +35,7 @@ public interface IChessPiece {
 //    Boolean isFirstMove();
     boolean isValidMove(Move move, IChessPiece[][] board);
 
-    boolean getFirstCond();
+    Integer getMoveCount();
 
-    void setFirstMove(boolean firstCondition);
+    void changeMoveCount(int b);
 }
