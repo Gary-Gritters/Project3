@@ -32,5 +32,11 @@ public interface IChessPiece {
      *                                   move.toColumn]} don't represent valid locations on the board.
      * @throws IllegalArgumentException  if {@code this} object isn't the piece at location {@code [move.fromRow, move.fromColumn]}.
      */
+
+//    Boolean isFirstMove();
     boolean isValidMove(Move move, IChessPiece[][] board);
+
+    boolean getFirstCond();
+
+    void setFirstMove(boolean firstCondition);
 }

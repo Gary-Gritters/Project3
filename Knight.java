@@ -11,6 +11,16 @@ public class Knight extends ChessPiece {
         return "p3.Knight";
     }
 
+    boolean isFirstMove = true;
+
+    public void setFirstMove(boolean firstMoveState){
+        isFirstMove = firstMoveState;
+    }
+
+    public boolean getFirstCond(){
+        return isFirstMove;
+    }
+
     public boolean isValidMove(Move move, IChessPiece[][] board) {
 
         boolean valid = true;

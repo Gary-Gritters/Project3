@@ -1,20 +1,33 @@
 package p3;
 
-public class Pawn extends ChessPiece {
 
+
+public class Pawn extends ChessPiece {
+    boolean isFirstMove;
 
     public Pawn(Player player) {
         super(player);
+        isFirstMove = true;
     }
 
     public String type() {
         return "p3.Pawn";
     }
 
+
+    public void setFirstMove(boolean firstMoveState){
+        isFirstMove = firstMoveState;
+    }
+
+    public boolean getFirstCond(){
+        return isFirstMove;
+    }
+
     // determines if the move is valid for a pawn piece
     public boolean isValidMove(Move move, IChessPiece[][] board) {
         boolean valid = true;
         boolean homerow = false;
+
 
         int colChangeABS;
         int rowChangeABS;

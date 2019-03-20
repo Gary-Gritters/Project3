@@ -2,12 +2,24 @@ package p3;
 
 public class King extends ChessPiece {
 
+
+
     public King(Player player) {
         super(player);
     }
 
     public String type() {
         return "p3.King";
+    }
+
+    boolean isFirstMove = true;
+
+    public void setFirstMove(boolean firstMoveState){
+        isFirstMove = firstMoveState;
+    }
+
+    public boolean getFirstCond(){
+        return isFirstMove;
     }
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {
@@ -73,6 +85,8 @@ public class King extends ChessPiece {
             }
         }
         */
+        //System.out.println(isFirstMove);
         return valid;
+
     }
 }

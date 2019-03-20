@@ -14,7 +14,7 @@ public class ChessModel implements IChessModel {
     // Tracks when pieces are captured
     private Stack<IChessPiece> captureHistory;
 
-    private Stack<IChessPiece> initialCondition;
+    private Stack<Boolean> initialCondition;
 
     // declare other instance variables as needed
 
@@ -25,6 +25,7 @@ public class ChessModel implements IChessModel {
 
         prevMoves = new Stack<>();
         captureHistory = new Stack<>();
+        initialCondition = new Stack<>();
 
         board[7][0] = new Rook(Player.WHITE);
         board[7][1] = new Knight(Player.WHITE);
@@ -93,6 +94,7 @@ public class ChessModel implements IChessModel {
                 }
             }
         }
+
         return true;
     }
 
@@ -119,6 +121,10 @@ public class ChessModel implements IChessModel {
             Move prevMove = prevMoves.pop();
             board[prevMove.fromRow][prevMove.fromColumn]= board[prevMove.toRow][prevMove.toColumn];
 
+            // Sets the previously moved piece's initial condition
+            board[prevMove.fromRow][prevMove.fromColumn].setFirstMove(initialCondition.pop());
+
+
             // Retrieves and places replaced piece
             board[prevMove.toRow][prevMove.toColumn] = captureHistory.pop();
         }
@@ -127,15 +133,19 @@ public class ChessModel implements IChessModel {
     public void move(Move move) {
         if(board[move.toRow][move.toColumn] != null){
             captureHistory.push(board[move.toRow][move.toColumn]);
+            initialCondition.push(board[move.fromRow][move.fromColumn].getFirstCond());
+            board[move.fromRow][move.fromColumn].setFirstMove(false);
         }
         else{
             captureHistory.push(null);
+            initialCondition.push(board[move.fromRow][move.fromColumn].getFirstCond());
+            board[move.fromRow][move.fromColumn].setFirstMove(false);
         }
         prevMoves.push(move);
 
         board[move.toRow][move.toColumn] = board[move.fromRow][move.fromColumn];
         board[move.fromRow][move.fromColumn] = null;
-        //undoCheck();
+
 
     }
 

@@ -14,6 +14,16 @@ public class Rook extends ChessPiece {
 
     }
 
+    boolean isFirstMove = true;
+
+    public void setFirstMove(boolean firstMoveState){
+        isFirstMove = firstMoveState;
+    }
+
+    public boolean getFirstCond(){
+        return isFirstMove;
+    }
+
     // determines if the move is valid for a rook piece
     public boolean isValidMove(Move move, IChessPiece[][] board) {
 

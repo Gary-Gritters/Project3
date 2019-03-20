@@ -12,6 +12,16 @@ public class Queen extends ChessPiece {
 
     }
 
+    boolean isFirstMove = true;
+
+    public void setFirstMove(boolean firstMoveState){
+        isFirstMove = firstMoveState;
+    }
+
+    public boolean getFirstCond(){
+        return isFirstMove;
+    }
+
     public boolean isValidMove(Move move, IChessPiece[][] board) {
         Bishop move1 = new Bishop(board[move.fromRow][move.fromColumn].player());
         Rook move2 = new Rook(board[move.fromRow][move.fromColumn].player());

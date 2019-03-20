@@ -10,6 +10,16 @@ public class Bishop extends ChessPiece {
         return "p3.Bishop";
     }
 
+    boolean isFirstMove = true;
+
+    public void setFirstMove(boolean firstMoveState){
+        isFirstMove = firstMoveState;
+    }
+
+    public boolean getFirstCond(){
+        return isFirstMove;
+    }
+
     public boolean isValidMove(Move move, IChessPiece[][] board) {
 
         boolean valid = true;
