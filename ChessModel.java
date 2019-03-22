@@ -1,3 +1,4 @@
+package p3;
 
 import java.util.Stack;
 
@@ -117,7 +118,19 @@ public class ChessModel implements IChessModel {
 
             // Retrieves previous move from stack
             Move prevMove = prevMoves.pop();
+            //For undoing castling
+            Move castleCheck = new Move(3, 10, 41, 2);
+            if(prevMoves.size() > 1) {
+                castleCheck = prevMoves.peek();
+            }
+            boolean undoTwice = false;
+            if(prevMoves.size() > 1 && board[prevMove.toRow][prevMove.toColumn].player() ==
+                    board[castleCheck.toRow][castleCheck.toColumn].player() /*&& !inCheck(board[prevMove.toRow][prevMove.toColumn].player())*/){
+                undoTwice = true;
+            }
+
             board[prevMove.fromRow][prevMove.fromColumn]= board[prevMove.toRow][prevMove.toColumn];
+
 
             // Sets the previously moved piece's initial condition
             board[prevMove.fromRow][prevMove.fromColumn].changeMoveCount(-1);
@@ -125,6 +138,9 @@ public class ChessModel implements IChessModel {
 
             // Retrieves and places replaced piece
             board[prevMove.toRow][prevMove.toColumn] = captureHistory.pop();
+            if(undoTwice == true){
+                undo();
+            }
         }
     }
 
@@ -133,7 +149,8 @@ public class ChessModel implements IChessModel {
             captureHistory.push(board[move.toRow][move.toColumn]);
         }
         else{
-            //if
+            //if en passant
+            // else push null
             captureHistory.push(null);
         }
         prevMoves.push(move);

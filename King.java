@@ -1,3 +1,5 @@
+package p3;
+
 public class King extends ChessPiece {
 
     Integer moveCount;
@@ -41,7 +43,28 @@ public class King extends ChessPiece {
         else colChangeABS = colChange;
 
         // Prevents movement other than surrounding cells
-        if(rowChangeABS > 1 || colChangeABS > 1){
+
+        //Checks for white castling
+        if((move.toRow == 7 && move.toColumn == 0) &&
+        ((moveCount == 0) && (board[7][0] != null) && (board[7][0].getMoveCount() == 0))){
+            for(int i = 1; i < 4; i++){
+                if(board[7][i] != null){
+                    valid = false;
+                }
+            }
+            move.toColumn = 2;
+        }else if((move.toRow == 7 && move.toColumn == 7) &&
+        ((moveCount == 0) && (board[7][7] != null) && (board[7][7].getMoveCount() == 0))){
+            for(int i = 6; i < 4; i--){
+                if(board[7][i] != null){
+                    valid = false;
+                }
+            }
+            move.toColumn = 6;
+
+        }
+        //Checks for normal king movement
+        else if(rowChangeABS > 1 || colChangeABS > 1){
             valid  = false;
         }
 

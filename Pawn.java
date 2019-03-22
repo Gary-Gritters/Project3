@@ -1,4 +1,4 @@
-
+package p3;
 
 public class Pawn extends ChessPiece {
 
@@ -25,6 +25,7 @@ public class Pawn extends ChessPiece {
     public boolean isValidMove(Move move, IChessPiece[][] board) {
         boolean valid = true;
         boolean homerow = false;
+        boolean enPassantRow = false;
 
 
         int colChangeABS;
@@ -55,6 +56,21 @@ public class Pawn extends ChessPiece {
             if(move.fromRow == 6){
                 homerow = true;
             }
+        }
+
+        if(board[move.fromRow][move.fromColumn].player()==Player.BLACK){
+            if(move.fromRow == 4){
+                enPassantRow = true;
+            }
+        }
+        else{
+            if(move.fromRow == 3){
+                enPassantRow = true;
+            }
+        }
+
+        if(enPassantRow == true){
+
         }
 
         // Prevents movement through other pieces vertically

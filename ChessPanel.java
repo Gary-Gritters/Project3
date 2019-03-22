@@ -1,3 +1,4 @@
+package p3;
 
 import javax.swing.*;
 import java.awt.*;
@@ -270,11 +271,18 @@ public class ChessPanel extends JPanel {
                         } else {
                             toRow = r;
                             toCol = c;
+                            int lookingForCastle = c;
                             firstTurnFlag = true;
                             Move m = new Move(fromRow, fromCol, toRow, toCol);
 
                             if ((model.isValidMove(m)) == true){
                                 System.out.println(model.pieceAt(fromRow,fromCol).getMoveCount());
+                                if(m.toColumn != lookingForCastle){
+                                    if (m.toRow == 7 && m.toColumn == 6 && model.pieceAt(r, c).type().equals("p3.Rook")){
+                                        Move castleMove = new Move(7, 7, 7, 5);
+                                        model.move(castleMove);
+                                    }
+                                }
                                 model.move(m);
                                 model.undoCheck();
                                 model.setNextPlayer();

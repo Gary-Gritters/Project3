@@ -1,3 +1,5 @@
+package p3;
+
 public class Rook extends ChessPiece {
 
     Integer moveCount;
