@@ -13,7 +13,7 @@ public class ChessModel implements IChessModel {
     // Tracks when pieces are captured
     private Stack<IChessPiece> captureHistory;
 
-    private Stack<Integer> moveCounts;
+    private Stack<Boolean> promoted;
 
     // declare other instance variables as needed
 
@@ -24,7 +24,7 @@ public class ChessModel implements IChessModel {
 
         prevMoves = new Stack<>();
         captureHistory = new Stack<>();
-        moveCounts = new Stack<>();
+        promoted = new Stack<>();
 
         board[7][0] = new Rook(Player.WHITE);
         board[7][1] = new Knight(Player.WHITE);
@@ -57,6 +57,10 @@ public class ChessModel implements IChessModel {
         }
 
         player = Player.WHITE;
+    }
+
+    public void pawnPromotionCheck(boolean f){
+        promoted.push(f);
     }
 
 
@@ -108,7 +112,7 @@ public class ChessModel implements IChessModel {
         return valid;
     }
 
-    public Boolean prevMoveExisits(){
+    public Boolean prevMoveExists(){
         return prevMoves.size() != 0;
     }
 
@@ -118,6 +122,7 @@ public class ChessModel implements IChessModel {
 
             // Retrieves previous move from stack
             Move prevMove = prevMoves.pop();
+            Boolean resetPromote = promoted.pop();
             //For undoing castling
             Move castleCheck = new Move(3, 10, 41, 2);
             if(prevMoves.size() > 1) {
@@ -128,6 +133,18 @@ public class ChessModel implements IChessModel {
                     board[castleCheck.toRow][castleCheck.toColumn].player() &&
                     inCheck(board[prevMove.toRow][prevMove.toColumn].player())){
                 undoTwice = true;
+            }
+
+            IChessPiece undoPromoted;
+            if(currentPlayer() == Player.WHITE){
+                undoPromoted = new Pawn(Player.BLACK);
+            } else{
+                undoPromoted = new Pawn(Player.WHITE);
+            }
+
+
+            if(resetPromote == true){
+                setPiece(prevMove.toRow, prevMove.toColumn, undoPromoted);
             }
 
             board[prevMove.fromRow][prevMove.fromColumn]= board[prevMove.toRow][prevMove.toColumn];
