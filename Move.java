@@ -1,3 +1,4 @@
+package p3;
 
 public class Move {
     public int fromRow, fromColumn, toRow, toColumn;
