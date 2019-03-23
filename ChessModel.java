@@ -63,6 +63,10 @@ public class ChessModel implements IChessModel {
         promoted.push(f);
     }
 
+    public void promotePop(){
+        promoted.pop();
+    }
+
 
     public boolean isComplete() {
         boolean valid = false;
@@ -131,9 +135,13 @@ public class ChessModel implements IChessModel {
             boolean undoTwice = false;
             if(prevMoves.size() > 1 && board[prevMove.toRow][prevMove.toColumn].player() ==
                     board[castleCheck.toRow][castleCheck.toColumn].player() &&
-                    inCheck(board[prevMove.toRow][prevMove.toColumn].player())){
+                    board[prevMove.toRow][prevMove.toColumn].type().equals("p3.King") &&
+                    board[castleCheck.toRow][castleCheck.toColumn].type().equals("p3.Rook") &&
+                    board[prevMove.toRow][prevMove.toColumn].getMoveCount() == 1 &&
+                    board[castleCheck.toRow][castleCheck.toColumn].getMoveCount() == 1){
                 undoTwice = true;
             }
+
 
             IChessPiece undoPromoted;
             if(currentPlayer() == Player.WHITE){
@@ -157,7 +165,7 @@ public class ChessModel implements IChessModel {
             // Retrieves and places replaced piece
             board[prevMove.toRow][prevMove.toColumn] = captureHistory.pop();
             if(undoTwice == true){
-                undo();
+               undo();
             }
         }
     }
@@ -171,12 +179,13 @@ public class ChessModel implements IChessModel {
             // else push null
             captureHistory.push(null);
         }
+        promoted.push(false);
         prevMoves.push(move);
         board[move.fromRow][move.fromColumn].changeMoveCount(1);
         board[move.toRow][move.toColumn] = board[move.fromRow][move.fromColumn];
         board[move.fromRow][move.fromColumn] = null;
 
-
+        System.out.println(promoted.size());
     }
 
 

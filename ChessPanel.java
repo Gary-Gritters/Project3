@@ -32,6 +32,7 @@ public class ChessPanel extends JPanel {
     private int toCol;
     // declare other instance variables as needed
 
+    private boolean didIPromote;
     private listener listener;
     private undoListener undoListener;
 
@@ -242,7 +243,7 @@ public class ChessPanel extends JPanel {
     // inner class that represents action listener for buttons
     private class listener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-
+            didIPromote = false;
 
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
@@ -274,7 +275,6 @@ public class ChessPanel extends JPanel {
                             Move m = new Move(fromRow, fromCol, toRow, toCol);
 
                             if ((model.isValidMove(m)) == true){
-                                System.out.println(model.pieceAt(fromRow,fromCol).getMoveCount());
                                 if(m.toColumn != lookingForCastle){
                                     if (m.toRow == 7 && m.toColumn == 6 && model.pieceAt(r, c).type().equals("p3.Rook")){
                                         Move castleMove = new Move(7, 7, 7, 5);
@@ -299,14 +299,11 @@ public class ChessPanel extends JPanel {
                                         model.move(castleMove);
                                     }
                                 }
-                                model.move(m);
-                                model.undoCheck();
                                 //Promotion!
                                 String promotion = "";
-                                boolean didIPromote = false;
                                 if(!model.inCheck(model.currentPlayer())) {
                                     if (model.currentPlayer() == Player.WHITE) {
-                                        if (model.pieceAt(m.toRow, m.toColumn).type().equals("p3.Pawn")) {
+                                        if (model.pieceAt(m.fromRow, m.fromColumn).type().equals("p3.Pawn")) {
                                             if (m.toRow == 0){
                                                 while(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
                                                     try {
@@ -327,7 +324,7 @@ public class ChessPanel extends JPanel {
                                             }
                                         }
                                     } else {
-                                        if (model.pieceAt(m.toRow, m.toColumn).type().equals("p3.Pawn")) {
+                                        if (model.pieceAt(m.fromRow, m.fromColumn).type().equals("p3.Pawn")) {
                                             if (m.toRow == 7){
                                                 while(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
                                                     try {
@@ -350,7 +347,15 @@ public class ChessPanel extends JPanel {
                                         }
                                     }
                                 }
+                                model.move(m);
+                                model.undoCheck();
+                                //the promotion has to be done afterwords, or else it'll override what was there,
+                                // and then move the pawn there. effectively, the pawn captures what it was
+                                // supposed to be turned into if this if statement is before move
                                 if(didIPromote == true) {
+                                    //Replaces last false with a true
+                                    model.promotePop();
+                                    model.pawnPromotionCheck(didIPromote);
                                     IChessPiece promotedPawn = new King(model.currentPlayer());
                                     if (promotion.equals("Queen")) {
                                         promotedPawn = new Queen(model.currentPlayer());
@@ -366,7 +371,6 @@ public class ChessPanel extends JPanel {
                                     }
                                     model.setPiece(m.toRow, m.toColumn, promotedPawn);
                                 }
-                                model.pawnPromotionCheck(didIPromote);
                                 model.setNextPlayer();
 
                                 if(model.isComplete()) {
