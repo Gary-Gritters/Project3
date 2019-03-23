@@ -239,85 +239,90 @@ public class ChessModel implements IChessModel {
          */
         Player AI = p;
         Player other;
-        if(AI == Player.BLACK) {
+        if (AI == Player.BLACK) {
             other = Player.WHITE;
         } else {
             other = Player.BLACK;
         }
-        if(inCheck(AI)) {
-            int kingPosRB = 0;
-            int kingPosCB = 0;
-            for (int r = 0; r < 8; r++) {
-                for (int c = 0; c < 8; c++) {
-                    if (board[r][c] != null && board[r][c].type().equals("p3.King") && board[r][c].player() == AI) {
-                        kingPosRB = r;
-                        kingPosCB = c;
+        boolean didIMove = false;
+        boolean didIMove2 = false;
+        while (!didIMove && !didIMove2) {
+            if (inCheck(AI)) {
+                int kingPosRB = 0;
+                int kingPosCB = 0;
+                for (int r = 0; r < 8; r++) {
+                    for (int c = 0; c < 8; c++) {
+                        if (board[r][c] != null && board[r][c].type().equals("p3.King") && board[r][c].player() == AI) {
+                            kingPosRB = r;
+                            kingPosCB = c;
+                        }
                     }
                 }
-            }
-            for(int r = 0; r < 8; r++) {
-                for(int c = 0; c < 8; c++) {
-                    if (board[r][c] != null && board[r][c].type().equals("p3.King") && board[r][c].player() == AI) {
-                        Move outOfCheck = new Move(kingPosRB, kingPosCB, r, c);
-                        if (isValidMove(outOfCheck)) {
-                            move(outOfCheck);
-                            setNextPlayer();
-                        }
-                    } else if (board[r][c] != null && board[r][c].player() == AI){
-                        for(int rr = 0; rr < 8; rr++) {
-                            for(int cc = 0; cc < 8; cc++) {
-                                Move blockCheck = new Move(r, c, rr, cc);
-                                if(isValidMove(blockCheck)){
-                                    move(blockCheck);
-                                    setNextPlayer();
+                for (int r = 0; r < 8; r++) {
+                    for (int c = 0; c < 8; c++) {
+                        if (board[r][c] != null && board[r][c].type().equals("p3.King") && board[r][c].player() == AI) {
+                            Move outOfCheck = new Move(kingPosRB, kingPosCB, r, c);
+                            if (isValidMove(outOfCheck)) {
+                                move(outOfCheck);
+                                setNextPlayer();
+                                didIMove = true;
+                            }
+                        } else if (board[r][c] != null && board[r][c].player() == AI) {
+                            for (int rr = 0; rr < 8; rr++) {
+                                for (int cc = 0; cc < 8; cc++) {
+                                    Move blockCheck = new Move(r, c, rr, cc);
+                                    if (isValidMove(blockCheck)) {
+                                        move(blockCheck);
+                                        setNextPlayer();
+                                        didIMove = true;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-        } else {
-            boolean didIMove = false;
-            for (int r = 0; r < 8; r++) {
-                for (int c = 0; c < 8; c++) {
-                    for (int rr = 0; rr < 8; rr++) {
-                        for (int cc = 0; cc < 8; cc++) {
-                            if (board[r][c] != null && board[r][c].player() == AI) {
-                                Move putInCheck = new Move(r, c, rr, cc);
-                                if (isValidMove(putInCheck)) {
-                                    move(putInCheck);
-                                    setNextPlayer();
-                                    didIMove = true;
-                                    if (!inCheck(other)) {
-                                        undo();
-                                        didIMove = false;
-                                    } else {
-                                        for (int rrr = 0; rrr < 8; rrr++) {
-                                            for (int ccc = 0; ccc < 8; ccc++) {
-                                                if (board[r][c] != null && board[r][c].player() == other) {
-                                                    Move stopCheck = new Move(rrr, ccc, rr, cc);
-                                                    if (isValidMove(stopCheck)) {
-                                                        move(stopCheck);
-                                                        setNextPlayer();
-                                                        if (!inCheck(other)) {
+            } else {
+                for (int r = 0; r < 8; r++) {
+                    for (int c = 0; c < 8; c++) {
+                        for (int rr = 0; rr < 8; rr++) {
+                            for (int cc = 0; cc < 8; cc++) {
+                                if (board[r][c] != null && board[r][c].player() == AI) {
+                                    Move putInCheck = new Move(r, c, rr, cc);
+                                    if (isValidMove(putInCheck)) {
+                                        move(putInCheck);
+                                        setNextPlayer();
+                                        didIMove = true;
+                                        if (!inCheck(other)) {
+                                            undo();
+                                            didIMove = false;
+                                        } else {
+                                            for (int rrr = 0; rrr < 8; rrr++) {
+                                                for (int ccc = 0; ccc < 8; ccc++) {
+                                                    if (board[r][c] != null && board[r][c].player() == other) {
+                                                        Move stopCheck = new Move(rrr, ccc, rr, cc);
+                                                        if (isValidMove(stopCheck)) {
+                                                            move(stopCheck);
+                                                            setNextPlayer();
+                                                            if (!inCheck(other)) {
+                                                                undo();
+                                                                didIMove = false;
+                                                            }
                                                             undo();
-                                                            didIMove = false;
                                                         }
-                                                        undo();
-                                                    }
-                                                } else {
-                                                    for (int rrrr = 0; rrrr < 8; rrrr++) {
-                                                        for (int cccc = 0; cccc < 8; cccc++) {
-                                                            if (board[r][c] != null && board[r][c].player() == other) {
-                                                                Move blockCheck = new Move(rrr, ccc, rrrr, cccc);
-                                                                if (isValidMove(blockCheck)) {
-                                                                    move(blockCheck);
-                                                                    setNextPlayer();
-                                                                    if (!inCheck(other)) {
+                                                    } else {
+                                                        for (int rrrr = 0; rrrr < 8; rrrr++) {
+                                                            for (int cccc = 0; cccc < 8; cccc++) {
+                                                                if (board[r][c] != null && board[r][c].player() == other) {
+                                                                    Move blockCheck = new Move(rrr, ccc, rrrr, cccc);
+                                                                    if (isValidMove(blockCheck)) {
+                                                                        move(blockCheck);
+                                                                        setNextPlayer();
+                                                                        if (!inCheck(other)) {
+                                                                            undo();
+                                                                            didIMove = false;
+                                                                        }
                                                                         undo();
-                                                                        didIMove = false;
                                                                     }
-                                                                    undo();
                                                                 }
                                                             }
                                                         }
@@ -331,23 +336,23 @@ public class ChessModel implements IChessModel {
                         }
                     }
                 }
-            }
-            if (!didIMove) {
-                for (int r = 0; r < 8; r++) {
-                    for (int c = 0; c < 8; c++) {
-                        for (int rr = 0; rr < 8; rr++) {
-                            for (int cc = 0; cc < 8; cc++) {
-                                if (board[r][c] != null && board[r][c].player() == other) {
-                                    if (board[rr][cc] != null && board[rr][cc].player() == AI) {
-                                        Move amIInDanger = new Move(r, c, rr, cc);
-                                        if (isValidMove(amIInDanger)) {
-                                            for (int rrr = 0; rrr < 8; rrr++) {
-                                                for (int ccc = 0; ccc < 8; ccc++) {
-                                                    Move outOfDanger = new Move(rr, cc, rrr, ccc);
-                                                    if (isValidMove(outOfDanger)) {
-                                                        move(outOfDanger);
-                                                        setNextPlayer();
-                                                        didIMove = true;
+                if (!didIMove) {
+                    for (int r = 0; r < 8; r++) {
+                        for (int c = 0; c < 8; c++) {
+                            for (int rr = 0; rr < 8; rr++) {
+                                for (int cc = 0; cc < 8; cc++) {
+                                    if (board[r][c] != null && board[r][c].player() == other) {
+                                        if (board[rr][cc] != null && board[rr][cc].player() == AI) {
+                                            Move amIInDanger = new Move(r, c, rr, cc);
+                                            if (isValidMove(amIInDanger)) {
+                                                for (int rrr = 0; rrr < 8; rrr++) {
+                                                    for (int ccc = 0; ccc < 8; ccc++) {
+                                                        Move outOfDanger = new Move(rr, cc, rrr, ccc);
+                                                        if (isValidMove(outOfDanger)) {
+                                                            move(outOfDanger);
+                                                            setNextPlayer();
+                                                            didIMove2 = true;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -358,17 +363,18 @@ public class ChessModel implements IChessModel {
                         }
                     }
                 }
-            }
-            if (!didIMove) {
-                for (int r = 0; r < 8; r++) {
-                    for (int c = 0; c < 8; c++) {
-                        for (int rr = 0; rr < 8; rr++) {
-                            for (int cc = 0; cc < 8; cc++) {
-                                if (board[r][c] != null && board[r][c].player() == AI) {
-                                    Move random = new Move(r, c, rr, cc);
-                                    if (isValidMove(random)) {
-                                        move(random);
-                                        setNextPlayer();
+                if (!didIMove2) {
+                    for (int r = 0; r < 8; r++) {
+                        for (int c = 0; c < 8; c++) {
+                            for (int rr = 0; rr < 8; rr++) {
+                                for (int cc = 0; cc < 8; cc++) {
+                                    if (board[r][c] != null && board[r][c].player() == AI) {
+                                        Move random = new Move(r, c, rr, cc);
+                                        if (isValidMove(random)) {
+                                            move(random);
+                                            setNextPlayer();
+                                            didIMove2 = true;
+                                        }
                                     }
                                 }
                             }
