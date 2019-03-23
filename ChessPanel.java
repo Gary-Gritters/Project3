@@ -9,7 +9,9 @@ import java.awt.event.ActionListener;
 /*
  * Initial condition stack before piece moves
  *      En Passant
+ *      Castling
  *
+ * Promotion
  * AI
  * JUnits
  */
@@ -18,7 +20,6 @@ public class ChessPanel extends JPanel {
     private JButton[][] board;
     private JButton undo;
     private ChessModel model;
-
 
 
     private ImageIcon wRook, wBishop, wQueen, wKing, wPawn, wKnight;
@@ -70,8 +71,6 @@ public class ChessPanel extends JPanel {
         undo.addActionListener(undoListener);
         buttonpanel.add(undo);
         firstTurnFlag = true;
-
-
     }
 
     private void setBackGroundColor(int r, int c) {
@@ -216,6 +215,9 @@ public class ChessPanel extends JPanel {
 
         }
         repaint();
+        if(model.currentPlayer() == Player.BLACK) {
+            model.AI(Player.BLACK);
+        }
     }
 
     private class undoListener implements ActionListener {
@@ -301,77 +303,10 @@ public class ChessPanel extends JPanel {
                                 }
                                 model.move(m);
                                 model.undoCheck();
-                                //Promotion!
-                                String promotion = "";
-                                boolean didIPromote = false;
-                                if(!model.inCheck(model.currentPlayer())) {
-                                    if (model.currentPlayer() == Player.WHITE) {
-                                        if (model.pieceAt(m.toRow, m.toColumn).type().equals("p3.Pawn")) {
-                                            if (m.toRow == 0){
-                                                while(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
-                                                    try {
-                                                        promotion = JOptionPane.showInputDialog(null,
-                                                                "What new piece do you want?\n" +
-                                                                        "Queen, Knight, Rook, Bishop");
-                                                        if (promotion.length() > 2) {
-                                                            promotion = promotion.substring(0, 1).toUpperCase() + promotion.substring(1).toLowerCase();
-                                                        }
-                                                    } catch (IllegalArgumentException e) {
-                                                        throw e;
-                                                    }
-                                                    if (!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
-                                                        JOptionPane.showMessageDialog(null, "Give me a proper answer");
-                                                    }
-                                                }
-                                                didIPromote = true;
-                                            }
-                                        }
-                                    } else {
-                                        if (model.pieceAt(m.toRow, m.toColumn).type().equals("p3.Pawn")) {
-                                            if (m.toRow == 7){
-                                                while(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
-                                                    try {
-                                                        promotion = JOptionPane.showInputDialog(null,
-                                                                "What new piece do you want?\n" +
-                                                                        "Queen, Knight, Rook, Bishop");
-                                                        if(promotion.length() > 2) {
-                                                            promotion = promotion.substring(0, 1).toUpperCase() + promotion.substring(1).toLowerCase();
-                                                        }
-                                                    }catch(IllegalArgumentException e){
-                                                        throw e;
-                                                    }
-                                                    if(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")){
-                                                        JOptionPane.showMessageDialog(null, "Give me a proper answer");
-                                                    }
-                                                }
-                                                didIPromote = true;
-
-                                            }
-                                        }
-                                    }
-                                }
-                                if(didIPromote == true) {
-                                    IChessPiece promotedPawn = new King(model.currentPlayer());
-                                    if (promotion.equals("Queen")) {
-                                        promotedPawn = new Queen(model.currentPlayer());
-                                    }
-                                    if (promotion.equals("Knight")) {
-                                        promotedPawn = new Knight(model.currentPlayer());
-                                    }
-                                    if (promotion.equals("Rook")) {
-                                        promotedPawn = new Rook(model.currentPlayer());
-                                    }
-                                    if (promotion.equals("Bishop")) {
-                                        promotedPawn = new Bishop(model.currentPlayer());
-                                    }
-                                    model.setPiece(m.toRow, m.toColumn, promotedPawn);
-                                }
-                                model.pawnPromotionCheck(didIPromote);
                                 model.setNextPlayer();
 
                                 if(model.isComplete()) {
-                                    JOptionPane.showMessageDialog(null, "Checkmate!");
-
+                                    JOptionPane.showInputDialog(null, "This is the message", "Checkmate!");
                                 }
                             }
 
