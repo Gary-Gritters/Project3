@@ -165,9 +165,23 @@ public class ChessModel implements IChessModel {
             // Sets the previously moved piece's initial condition
             board[prevMove.fromRow][prevMove.fromColumn].changeMoveCount(-1);
 
-
-            // Retrieves and places replaced piece
-            board[prevMove.toRow][prevMove.toColumn] = captureHistory.pop();
+            if(board[prevMove.fromRow][prevMove.fromColumn].type().equals("p3.Pawn") &&
+                    Math.abs(prevMove.fromRow-prevMove.toRow) == 1 &&
+                    Math.abs(prevMove.toColumn - prevMove.fromColumn) == 1 &&
+                    (Math.abs(castleCheck.fromRow - castleCheck.toRow) == 2) &&
+                    board[prevMove.fromRow][prevMove.fromColumn].getMoveCount() > 1)
+                    {
+                        System.out.println("The problem is here");
+                        if(currentPlayer() == Player.BLACK) {
+                            board[prevMove.toRow + 1][prevMove.toColumn] = captureHistory.pop();
+                        }else{
+                            board[prevMove.toRow - 1][prevMove.toColumn] = captureHistory.pop();
+                        }
+                        board[prevMove.toRow][prevMove.toColumn] = null;
+            }else {
+                // Retrieves and places replaced piece
+                board[prevMove.toRow][prevMove.toColumn] = captureHistory.pop();
+            }
             if(undoTwice == true){
                undo();
             }
@@ -175,7 +189,29 @@ public class ChessModel implements IChessModel {
     }
 
     public void move(Move move) {
-        if(board[move.toRow][move.toColumn] != null){
+        Move enPassant;
+        Boolean badEnPassant = false;
+        if(board[move.fromRow][move.fromColumn].type().equals("p3.Pawn") &&
+                board[move.toRow][move.toColumn] == null &&
+                Math.abs(move.fromRow-move.toRow) == 1 && Math.abs(move.toColumn - move.fromColumn) == 1){
+            if(prevMoves.size() > 0){
+                enPassant = prevMoves.peek();
+                System.out.println(board[enPassant.toRow][enPassant.toColumn].player());
+                if (!board[enPassant.toRow][enPassant.toColumn].type().equals("p3.Pawn") ||
+                        !(Math.abs(enPassant.fromRow - enPassant.toRow) == 2) ||
+                        Math.abs(enPassant.fromRow - move.toRow) != 1 || enPassant.toColumn != move.toColumn) {
+                    badEnPassant = true;
+                }
+            }
+            if(currentPlayer() == Player.BLACK) {
+                captureHistory.push(board[move.toRow - 1][move.toColumn]);
+                board[move.toRow - 1][move.toColumn] = null;
+            }else{
+                captureHistory.push(board[move.toRow + 1][move.toColumn]);
+                board[move.toRow + 1][move.toColumn] = null;
+            }
+
+        }else if(board[move.toRow][move.toColumn] != null){
             captureHistory.push(board[move.toRow][move.toColumn]);
         }
         else{
@@ -188,6 +224,10 @@ public class ChessModel implements IChessModel {
         board[move.fromRow][move.fromColumn].changeMoveCount(1);
         board[move.toRow][move.toColumn] = board[move.fromRow][move.fromColumn];
         board[move.fromRow][move.fromColumn] = null;
+        if(badEnPassant){
+            setNextPlayer();
+            undo();
+        }
     }
 
 
@@ -266,7 +306,7 @@ public class ChessModel implements IChessModel {
             *Protect my piece
                 -Doesn't exist
             *Move a piece
-                -Doesn't exist
+                -Does exist
         */
         if(compInCheckMove(compTeam)){
             setNextPlayer();
@@ -286,12 +326,11 @@ public class ChessModel implements IChessModel {
             setNextPlayer();
             return;
         }
-
         if(compIsInDanger(compTeam)){
 
         }
 
-        if(compRandomMove(compTeam)) {
+        if(compRandomMove(compTeam)){
             setNextPlayer();
             return;
         }
@@ -418,7 +457,6 @@ public class ChessModel implements IChessModel {
         }
         return false;
     }
-
     private boolean compIsInDanger(Player compTeam){
         return false;
     }

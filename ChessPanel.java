@@ -8,9 +8,8 @@ import java.awt.event.ActionListener;
 
 /*
  *
+ * J-Units
  * AI
- *
- * -if in check- out of check
  *
  */
 public class ChessPanel extends JPanel {
@@ -380,9 +379,9 @@ public class ChessPanel extends JPanel {
 
                                 }
 
-                                if(model.currentPlayer() == Player.BLACK){
+                               /* if(model.currentPlayer() == Player.BLACK){
                                     model.AI(Player.BLACK);
-                                }
+                                }*/
 
                             }
 
