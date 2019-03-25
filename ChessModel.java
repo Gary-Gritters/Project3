@@ -1,5 +1,6 @@
 package p3;
 
+import java.util.Random;
 import java.util.Stack;
 
 public class ChessModel implements IChessModel {
@@ -16,11 +17,13 @@ public class ChessModel implements IChessModel {
     private Stack<Boolean> promoted;
 
     // declare other instance variables as needed
+    private Random rand;
 
     public ChessModel() {
         status = GUIcodes.NoMessage;
         board = new IChessPiece[8][8];
         player = Player.WHITE;
+        rand = new Random();
 
         prevMoves = new Stack<>();
         captureHistory = new Stack<>();
@@ -269,7 +272,6 @@ public class ChessModel implements IChessModel {
             setNextPlayer();
             return;
         }
-        //Doesn't work lol
         if(compCheckmateThem(compTeam)){
             setNextPlayer();
             return;
@@ -284,8 +286,14 @@ public class ChessModel implements IChessModel {
             setNextPlayer();
             return;
         }
+
         if(compIsInDanger(compTeam)){
 
+        }
+
+        if(compRandomMove(compTeam)) {
+            setNextPlayer();
+            return;
         }
     }
 
@@ -410,7 +418,32 @@ public class ChessModel implements IChessModel {
         }
         return false;
     }
+
     private boolean compIsInDanger(Player compTeam){
+        return false;
+    }
+
+    private boolean compRandomMove(Player compTeam) {
+        boolean didMove = false;
+        int fromR = rand.nextInt(8);
+        int fromC = rand.nextInt(8);
+        int toR = rand.nextInt(8);
+        int toC = rand.nextInt(8);
+        Move theoMove = new Move(fromR, fromC, toR, toC);
+        while(!didMove) {
+            if(board[fromR][fromC] != null && board[fromR][fromC].isValidMove(theoMove, board) && board[fromR][fromC].player() == compTeam) {
+                move(theoMove);
+                System.out.println(theoMove);
+                didMove = true;
+                return didMove;
+            } else {
+                fromR = rand.nextInt(8);
+                fromC = rand.nextInt(8);
+                toR = rand.nextInt(8);
+                toC = rand.nextInt(8);
+                theoMove = new Move(fromR, fromC, toR, toC);
+            }
+        }
         return false;
     }
 }
