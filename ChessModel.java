@@ -133,10 +133,11 @@ public class ChessModel implements IChessModel {
                 castleCheck = prevMoves.peek();
             }
             boolean undoTwice = false;
-            if(prevMoves.size() > 1 && board[prevMove.toRow][prevMove.toColumn].player() ==
-                    board[castleCheck.toRow][castleCheck.toColumn].player() &&
+            if(prevMoves.size() > 1 &&
                     board[prevMove.toRow][prevMove.toColumn].type().equals("p3.King") &&
                     board[castleCheck.toRow][castleCheck.toColumn].type().equals("p3.Rook") &&
+                    board[prevMove.toRow][prevMove.toColumn].player() ==
+                    board[castleCheck.toRow][castleCheck.toColumn].player() &&
                     board[prevMove.toRow][prevMove.toColumn].getMoveCount() == 1 &&
                     board[castleCheck.toRow][castleCheck.toColumn].getMoveCount() == 1){
                 undoTwice = true;
@@ -184,8 +185,6 @@ public class ChessModel implements IChessModel {
         board[move.fromRow][move.fromColumn].changeMoveCount(1);
         board[move.toRow][move.toColumn] = board[move.fromRow][move.fromColumn];
         board[move.fromRow][move.fromColumn] = null;
-
-        System.out.println(promoted.size());
     }
 
 
@@ -251,23 +250,81 @@ public class ChessModel implements IChessModel {
         board[row][column] = piece;
     }
 
-    public void AI() {
-        /*
-         * Write a simple AI set of rules in the following order.
-         * a. Check to see if you are in check.
-         * 		i. If so, get out of check by moving the king or placing a piece to block the check
-         *
-         * b. Attempt to put opponent into check (or checkmate).
-         * 		i. Attempt to put opponent into check without losing your piece
-         *		ii. Perhaps you have won the game.
-         *
-         *c. Determine if any of your pieces are in danger,
-         *		i. p3.Move them if you can.
-         *		ii. Attempt to protect that piece.
-         *
-         *d. p3.Move a piece (pawns first) forward toward opponent king
-         *		i. check to see if that piece is in danger of being removed, if so, move a different piece.
-         */
+    public void AI(Player compTeam) {
+        if(compInCheckMove(compTeam)){
+            setNextPlayer();
+            return;
+        }
+        if(compPutThemInCheck(compTeam)){
+            setNextPlayer();
+            return;
+        }
+        if(compCanCapture(compTeam)){
+            setNextPlayer();
+            return;
+        }
+    }
 
+    private boolean compInCheckMove(Player compTeam) {
+        if(!isComplete()) {
+            if(inCheck(compTeam)){
+                for(int r = 0; r < 8; r++) {
+                    for (int c = 0; c < 8; c++) {
+                        if(board[r][c] != null) {
+                            if (board[r][c].player() == compTeam) {
+
+                                for (int rr = 0; rr < 8; rr++) {
+                                    for (int cc = 0; cc < 8; cc++) {
+
+                                        Move theoMove = new Move(r, c, rr, cc);
+                                        if (board[r][c].isValidMove(theoMove, board)) {
+                                            move(theoMove);
+
+                                            if (!inCheck(currentPlayer())) {
+                                                return true;
+                                            }
+
+                                            undo();
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean compPutThemInCheck(Player compTeam){
+
+        return false;
+    }
+
+    private boolean compCanCapture(Player compTeam){
+        for(int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                if (board[r][c] != null) {
+                    if (board[r][c].player() == compTeam) {
+
+                        for (int rr = 0; rr < 8; rr++) {
+                            for (int cc = 0; cc < 8; cc++) {
+
+                                Move theoMove = new Move(r, c, rr, cc);
+                                if (board[rr][cc] != null && board[rr][cc].player() != compTeam) {
+                                    if(board[r][c].isValidMove(theoMove, board)) {
+                                        move(theoMove);
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

@@ -7,11 +7,11 @@ import java.awt.event.ActionListener;
 
 
 /*
- * Initial condition stack before piece moves
- *      En Passant
  *
  * AI
- * JUnits
+ *
+ * -if in check- out of check
+ *
  */
 public class ChessPanel extends JPanel {
 
@@ -245,9 +245,11 @@ public class ChessPanel extends JPanel {
         public void actionPerformed(ActionEvent event) {
             didIPromote = false;
 
+            //For loop checks for where the palyer clicked
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
                     if (board[r][c] == event.getSource())
+
                         if (firstTurnFlag == true) {
                             fromRow = r;
                             fromCol = c;
@@ -377,6 +379,11 @@ public class ChessPanel extends JPanel {
                                     JOptionPane.showMessageDialog(null, "Checkmate!");
 
                                 }
+
+                                if(model.currentPlayer() == Player.BLACK){
+                                    model.AI(Player.BLACK);
+                                }
+
                             }
 
                             // Resets selected background
@@ -388,10 +395,10 @@ public class ChessPanel extends JPanel {
                                 for (int cc = 0; cc < model.numColumns(); cc++) {
                                     setBackGroundColor(rr,cc);
                                 }
-                                }
-
+                            }
                             displayBoard();
                         }
+
         }
     }
 }
