@@ -299,7 +299,40 @@ public class ChessModel implements IChessModel {
     }
 
     private boolean compPutThemInCheck(Player compTeam){
+        //Checks whole board for own pieces
+        for(int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                if (board[r][c] != null) {
+                    if (board[r][c].player() == compTeam) {
 
+                        for (int rr = 0; rr < 8; rr++) {
+                            for (int cc = 0; cc < 8; cc++) {
+
+                                //Checks for each of those pieces moves
+                                Move theoMove = new Move(r, c, rr, cc);
+                                //If that move is valid,
+                                if(board[r][c].isValidMove(theoMove, board)){
+                                    move(theoMove);
+                                    //From here, look if I have a move onto the enemy king.
+                                    //If I do, stay here, it's check. Otherwise, go back.
+                                    for (int rrr = 0; rrr < 8; rrr++) {
+                                        for (int ccc = 0; ccc < 8; ccc++) {
+                                            Move checkMove = new Move (rr, cc, rrr, ccc);
+                                            if(board[rr][cc].isValidMove(checkMove, board) && board[rrr][ccc] != null &&
+                                                    board[rrr][ccc].type().equals("p3.King") && board[rrr][ccc].player() != compTeam){
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                    undo();
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
