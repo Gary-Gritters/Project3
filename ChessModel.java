@@ -251,17 +251,41 @@ public class ChessModel implements IChessModel {
     }
 
     public void AI(Player compTeam) {
+        /*
+            See if I'm in check
+                -First possible move to prevent check
+            Put them into checkmate
+                -Doesn't display a message until white tries to move
+            Put them into check
+                -Doesn't account for dumb move and losing a piece
+            Take their piece
+                -Will currently sacrifice a queen for a pawn
+            *Protect my piece
+                -Doesn't exist
+            *Move a piece
+                -Doesn't exist
+        */
         if(compInCheckMove(compTeam)){
             setNextPlayer();
             return;
         }
-        if(compPutThemInCheck(compTeam)){
+        //Doesn't work lol
+        if(compCheckmateThem(compTeam)){
             setNextPlayer();
             return;
         }
+
+        if(compPutThemInCheck(compTeam)){
+           setNextPlayer();
+           return;
+        }
+
         if(compCanCapture(compTeam)){
             setNextPlayer();
             return;
+        }
+        if(compIsInDanger(compTeam)){
+
         }
     }
 
@@ -298,6 +322,38 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
+    private boolean compCheckmateThem(Player compTeam){
+        for(int r = 0; r < 8; r++){
+            for(int c = 0; c < 8; c++){
+                if(board[r][c] != null) {
+                    if (board[r][c].player() == compTeam) {
+
+                        for (int rr = 0; rr < 8; rr++) {
+                            for (int cc = 0; cc < 8; cc++) {
+                                Move theoMove = new Move(r, c, rr, cc);
+                                if (board[r][c].isValidMove(theoMove, board)) {
+                                    //Weird stuff with setNextPlayer, since isComplete checks to see if currentPlayer()
+                                    //is in checkmate. Without setNextPlayer, will check if the A. I. is in checkmate
+                                    //except, we want to set them in checkmate
+                                    move(theoMove);
+                                    setNextPlayer();
+                                    if (isComplete()) {
+                                        setNextPlayer();
+                                        return true;
+                                    } else {
+                                        setNextPlayer();
+                                        undo();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private boolean compPutThemInCheck(Player compTeam){
         //Checks whole board for own pieces
         for(int r = 0; r < 8; r++) {
@@ -315,14 +371,8 @@ public class ChessModel implements IChessModel {
                                     move(theoMove);
                                     //From here, look if I have a move onto the enemy king.
                                     //If I do, stay here, it's check. Otherwise, go back.
-                                    for (int rrr = 0; rrr < 8; rrr++) {
-                                        for (int ccc = 0; ccc < 8; ccc++) {
-                                            Move checkMove = new Move (rr, cc, rrr, ccc);
-                                            if(board[rr][cc].isValidMove(checkMove, board) && board[rrr][ccc] != null &&
-                                                    board[rrr][ccc].type().equals("p3.King") && board[rrr][ccc].player() != compTeam){
-                                                return true;
-                                            }
-                                        }
+                                    if(inCheck(Player.WHITE)){
+                                        return true;
                                     }
                                     undo();
 
@@ -358,6 +408,9 @@ public class ChessModel implements IChessModel {
                 }
             }
         }
+        return false;
+    }
+    private boolean compIsInDanger(Player compTeam){
         return false;
     }
 }
