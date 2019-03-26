@@ -428,7 +428,7 @@ public class ChessModel implements IChessModel {
                                             move(theoMove);
 
                                             //If they aren't in check anymore, leave that piece there.
-                                            if (!inCheck(currentPlayer())) {
+                                            if(!inCheck(compTeam)){
                                                 return true;
                                             }
 
@@ -502,8 +502,17 @@ public class ChessModel implements IChessModel {
                                     move(theoMove);
                                     //move it. If they are in check, leave that piece there.
                                     //Else, undo it
-                                    if(inCheck(Player.WHITE)){
-                                        return true;
+                                    if(!inCheck(compTeam)) {
+                                        if (compTeam == Player.BLACK) {
+                                            if (inCheck(Player.WHITE)) {
+                                                return true;
+                                            }
+                                        }
+                                        if (compTeam == Player.WHITE) {
+                                            if (inCheck(Player.BLACK)) {
+                                                return true;
+                                            }
+                                        }
                                     }
                                     undo();
 
@@ -535,7 +544,12 @@ public class ChessModel implements IChessModel {
                                     if(board[r][c].isValidMove(theoMove, board)) {
                                         //leave that piece there.
                                         move(theoMove);
-                                        return true;
+                                        if(!inCheck(compTeam)){
+                                            return true;
+                                        }else{
+                                            System.out.println("badmove4");
+                                            undo();
+                                        }
                                     }
                                 }
                             }
@@ -563,9 +577,7 @@ public class ChessModel implements IChessModel {
             //If the spot i'm trying to move has a piece, their move is valid, and it is my piece, make the move
             if(board[fromR][fromC] != null && board[fromR][fromC].isValidMove(theoMove, board) && board[fromR][fromC].player() == compTeam) {
                 move(theoMove);
-                System.out.println(theoMove);
                 didMove = true;
-                return didMove;
                 //Else, try again
             } else {
                 fromR = rand.nextInt(8);
@@ -574,8 +586,18 @@ public class ChessModel implements IChessModel {
                 toC = rand.nextInt(8);
                 theoMove = new Move(fromR, fromC, toR, toC);
             }
+            if(inCheck(compTeam)){
+                undo();
+                didMove = false;
+                fromR = rand.nextInt(8);
+                fromC = rand.nextInt(8);
+                toR = rand.nextInt(8);
+                toC = rand.nextInt(8);
+                theoMove = new Move(fromR, fromC, toR, toC);
+                System.out.println("Badmove6");
+            }
         }
         //Will never return false lol
-        return false;
+        return didMove;
     }
 }
