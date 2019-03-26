@@ -44,7 +44,7 @@ public class King extends ChessPiece {
 
         // Prevents movement other than surrounding cells
 
-        //Checks for white castling
+        //Checks for white castling at both locations. Makes sure neither have moved, and you selected it's piece
         if(board[move.fromRow][move.fromColumn].player() == Player.WHITE && (move.toRow == 7 && move.toColumn == 0) &&
         ((moveCount == 0) && (board[7][0] != null) && (board[7][0].getMoveCount() == 0))){
             for(int i = 1; i < 4; i++){
@@ -63,7 +63,7 @@ public class King extends ChessPiece {
             move.toColumn = 6;
 
         }
-        //Checks for black castling
+        //Checks for black castling at both locations.
         else if(board[move.fromRow][move.fromColumn].player() == Player.BLACK && (move.toRow == 0 && move.toColumn == 0) &&
                 ((moveCount == 0) && (board[0][0] != null) && (board[0][0].getMoveCount() == 0))){
             for(int i = 1; i < 4; i++){

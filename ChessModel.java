@@ -21,14 +21,18 @@ public class ChessModel implements IChessModel {
 
     public ChessModel() {
         status = GUIcodes.NoMessage;
+        //Creating the board
         board = new IChessPiece[8][8];
+        //Sets the current player to white.
         player = Player.WHITE;
         rand = new Random();
 
+        //Creates all the stacks we'll need
         prevMoves = new Stack<>();
         captureHistory = new Stack<>();
         promoted = new Stack<>();
 
+        //Places white pieces
         board[7][0] = new Rook(Player.WHITE);
         board[7][1] = new Knight(Player.WHITE);
         board[7][2] = new Bishop(Player.WHITE);
@@ -43,6 +47,7 @@ public class ChessModel implements IChessModel {
             board[6][i] = new Pawn(Player.WHITE);
         }
 
+        //Places black pieces
         player = Player.BLACK;
 
         board[0][0] = new Rook(Player.BLACK);
@@ -71,30 +76,47 @@ public class ChessModel implements IChessModel {
     }
 
 
+    //Method to look for checkmate.
+    //Note: use's current player. Checkmate works since in panel, we call it after
+    //someone made a move and the turn got switched over to the player who is currently in check
     public boolean isComplete() {
         boolean valid = false;
 
+        //If we aren't check, don't even look to see if we can move out
         if(!inCheck(currentPlayer())){
             return false;
         }
 
+        //These first 2 for loops look through the board for every single piece
         for(int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
+
+                //Checks to make sure that spot isn't null
+                //Then checks to make sure that spot is the player in check.
                 if(board[r][c] != null) {
                     if (board[r][c].player() == currentPlayer()) {
 
+                        //These two for loops check for every single move those pieces can make
                         for (int rr = 0; rr < 8; rr++) {
                             for (int cc = 0; cc < 8; cc++) {
 
+                                //Creates a theoretical move from the piece at (r, c) to (rr, cc)
                                 Move theoMove = new Move(r, c, rr, cc);
+                                //If it's a valid move,
                                 if (board[r][c].isValidMove(theoMove, board)) {
+                                    //Then move that piece. We have to move that piece since inCheck looks for
+                                    //the pieces on the board to see if a player is in check
                                     move(theoMove);
 
+                                    //If we aren't in check,  then it isn't checkmate. Undo the theoretical move,
+                                    //and return false
                                     if (!inCheck(currentPlayer())) {
                                         undo();
                                         return false;
                                     }
 
+                                    //Else, undo that move and check the next move, unless that piece has tried every move.
+                                    //Then, move to the next piece.
                                     undo();
 
                                 }
@@ -108,6 +130,7 @@ public class ChessModel implements IChessModel {
         return true;
     }
 
+    //Uses's each pieces valid move. Makes sure it's an actual piece and that person's piece
     public boolean isValidMove(Move move) {
         boolean valid = false;
 
@@ -119,23 +142,32 @@ public class ChessModel implements IChessModel {
         return valid;
     }
 
+    //We use this to make sure there is something in the prevMoves stack
     public Boolean prevMoveExists(){
         return prevMoves.size() != 0;
     }
 
+    //This is our undo move. Oh boy. there is a lot in here.
     public void undo(){
         // If a previous move exists
         if(prevMoves.size() > 0){
 
-            // Retrieves previous move from stack
+            // Retrieves previous move from stack and a boolean from resetPromote
             Move prevMove = prevMoves.pop();
             Boolean resetPromote = promoted.pop();
-            //For undoing castling
-            Move castleCheck = new Move(3, 10, 41, 2);
+            //For undoing castling. Will only be used if there was a castle. Because of this,
+            //it doesn't matter the numbers we put in there. If for some reason it does run through,
+            //it will throw an error, since these numbers aren't on the board
+            Move castleCheck = new Move(999, 10, 41, 510);
+            //Since castling is actually two moves, we check the next move.
             if(prevMoves.size() > 1) {
                 castleCheck = prevMoves.peek();
             }
+
             boolean undoTwice = false;
+            //If the last move was the king, and the move before that was a rook, they were the same player
+            //and both of them have only moved once. None of these will actually happen if it wasn't a castle.
+            //If there wasn't a castle, there would be a black move inbetween them in the move stack.
             if(prevMoves.size() > 1 &&
                     board[prevMove.toRow][prevMove.toColumn].type().equals("p3.King") &&
                     board[castleCheck.toRow][castleCheck.toColumn].type().equals("p3.Rook") &&
@@ -143,35 +175,42 @@ public class ChessModel implements IChessModel {
                     board[castleCheck.toRow][castleCheck.toColumn].player() &&
                     board[prevMove.toRow][prevMove.toColumn].getMoveCount() == 1 &&
                     board[castleCheck.toRow][castleCheck.toColumn].getMoveCount() == 1){
+                //If it was a castle, undo twice. Effectively undoes both moves
                 undoTwice = true;
             }
 
-
-            IChessPiece undoPromoted;
-            if(currentPlayer() == Player.WHITE){
-                undoPromoted = new Pawn(Player.BLACK);
-            } else{
-                undoPromoted = new Pawn(Player.WHITE);
-            }
-
-
             if(resetPromote == true){
+                //Creates the piece to reset
+                IChessPiece undoPromoted;
+                if(currentPlayer() == Player.WHITE){
+                    undoPromoted = new Pawn(Player.BLACK);
+                } else{
+                    undoPromoted = new Pawn(Player.WHITE);
+                }
+                //If the last move was a promotion, replace whatever piece was there with pawn of the
+                //appropriate color
                 setPiece(prevMove.toRow, prevMove.toColumn, undoPromoted);
             }
 
+            //Moves the piece back
             board[prevMove.fromRow][prevMove.fromColumn]= board[prevMove.toRow][prevMove.toColumn];
 
 
-            // Sets the previously moved piece's initial condition
+            //Sets the previously moved piece's initial condition
+            //Basically, since we undid the previous move, that piece has moved -1 times
             board[prevMove.fromRow][prevMove.fromColumn].changeMoveCount(-1);
 
+            //This resets en passant. If the previous move was a pawn, if it moved diagonally,
+            //the move before that one moved 2 pieces forward or backward (black/white),
+            //and makes sure that pawn has moved more than once. Also makes sure the pawn before
+            //moved two rows up. In the scenario that that happened, puts the pawn that had been
+            //taken by that move in the spot beneath where he had moved from.
             if(board[prevMove.fromRow][prevMove.fromColumn].type().equals("p3.Pawn") &&
                     Math.abs(prevMove.fromRow-prevMove.toRow) == 1 &&
                     Math.abs(prevMove.toColumn - prevMove.fromColumn) == 1 &&
-                    (Math.abs(castleCheck.fromRow - castleCheck.toRow) == 2) &&
-                    board[prevMove.fromRow][prevMove.fromColumn].getMoveCount() > 1)
+                    board[prevMove.fromRow][prevMove.fromColumn].getMoveCount() > 1 &&
+                    (Math.abs(castleCheck.fromRow - castleCheck.toRow) == 2))
                     {
-                        System.out.println("The problem is here");
                         if(currentPlayer() == Player.BLACK) {
                             board[prevMove.toRow + 1][prevMove.toColumn] = captureHistory.pop();
                         }else{
@@ -179,30 +218,42 @@ public class ChessModel implements IChessModel {
                         }
                         board[prevMove.toRow][prevMove.toColumn] = null;
             }else {
-                // Retrieves and places replaced piece
+                // Retrieves and places replaced piece if not an enpassant
                 board[prevMove.toRow][prevMove.toColumn] = captureHistory.pop();
             }
+            //will undo again if there was a castle. will not go through again, since prevMove will be the rook,
+            //not the king
             if(undoTwice == true){
                undo();
             }
         }
     }
 
+    //Move!
     public void move(Move move) {
+        //Creates some variables for enPassant that we'll need
         Move enPassant;
         Boolean badEnPassant = false;
+        //If it's a pawn moving, who's moving diagonally to an empty square
         if(board[move.fromRow][move.fromColumn].type().equals("p3.Pawn") &&
                 board[move.toRow][move.toColumn] == null &&
                 Math.abs(move.fromRow-move.toRow) == 1 && Math.abs(move.toColumn - move.fromColumn) == 1){
+            //And there are moves in the stack.
             if(prevMoves.size() > 0){
+                //Check the previous move
                 enPassant = prevMoves.peek();
-                System.out.println(board[enPassant.toRow][enPassant.toColumn].player());
+                //If that previous move wasn't a pawn,  or that pawn hadn't moved twice, or that previous
+                //move wasn't right next to the pawn that wasn't enpassant
                 if (!board[enPassant.toRow][enPassant.toColumn].type().equals("p3.Pawn") ||
                         !(Math.abs(enPassant.fromRow - enPassant.toRow) == 2) ||
                         Math.abs(enPassant.fromRow - move.toRow) != 1 || enPassant.toColumn != move.toColumn) {
+                    //Then it was a bad move, and undo that move. Has to be done at the end of move, or else
+                    //things will get mixed up bad
                     badEnPassant = true;
                 }
             }
+            //But, even if it was a bad move, still make that move. If it was a bad move, we'll just undo it.
+            //Otherwise, we'll be able to undo it later if someone decides to.
             if(currentPlayer() == Player.BLACK) {
                 captureHistory.push(board[move.toRow - 1][move.toColumn]);
                 board[move.toRow - 1][move.toColumn] = null;
@@ -210,20 +261,25 @@ public class ChessModel implements IChessModel {
                 captureHistory.push(board[move.toRow + 1][move.toColumn]);
                 board[move.toRow + 1][move.toColumn] = null;
             }
-
+        //Basically, if the move wasn't an enpassant, and their move.to isn't empty, push it
         }else if(board[move.toRow][move.toColumn] != null){
             captureHistory.push(board[move.toRow][move.toColumn]);
         }
+        //Else if they didn't land on anything, just push null
         else{
-            //if en passant
-            // else push null
             captureHistory.push(null);
         }
+        //Push a false since we moved to the stack.
         promoted.push(false);
+        //Push the move to the stack.
         prevMoves.push(move);
+        //Increase that pieces move count by one.
         board[move.fromRow][move.fromColumn].changeMoveCount(1);
+        //Duplicates the piece from (fromRow, fromColumn) onto (toRow, toColumn)
         board[move.toRow][move.toColumn] = board[move.fromRow][move.fromColumn];
+        //Removes the piece at (fromRow, fromColumn)
         board[move.fromRow][move.fromColumn] = null;
+        //Now, if there was an bad enPassant, undo that move.
         if(badEnPassant){
             setNextPlayer();
             undo();
@@ -233,6 +289,7 @@ public class ChessModel implements IChessModel {
 
     public boolean inCheck(Player p){
 
+        //First looks for the king, and creates that position
         int kingPosR = 0;
         int kingPosC = 0;
         for(int r = 0; r < 8; r++) {
@@ -244,11 +301,13 @@ public class ChessModel implements IChessModel {
             }
         }
 
+        //Checks for if an enemy piece can move onto the king's spot
         for(int r = 0; r < 8; r++){
             for(int c = 0; c < 8; c++){
                 if(board[r][c] != null) {
                     if (board[r][c].player() != p) {
                         Move opponentMove = new Move(r,c, kingPosR, kingPosC);
+                        //If they have a valid move onto the king, then it is check
                         if(board[r][c].isValidMove(opponentMove, board)) {
                             return true;
                         }
@@ -258,10 +317,13 @@ public class ChessModel implements IChessModel {
 
             }
         }
+        //else not check
         return false;
     }
 
     public void undoCheck(){
+        //Helper method. Basically prevents a piece from ending their turn still in check.
+        //If they tried to, undo their turn and give them another shot.
         if (inCheck(currentPlayer())){
             undo();
             setNextPlayer();
@@ -281,6 +343,7 @@ public class ChessModel implements IChessModel {
         return 8;
     }
 
+    //Returns a piece at a spot
     public IChessPiece pieceAt(int row, int column) {
         return board[row][column];
     }
@@ -289,12 +352,18 @@ public class ChessModel implements IChessModel {
         player = player.next();
     }
 
+    //Changes a piece at a spot. Used for promotion.
     public void setPiece(int row, int column, IChessPiece piece) {
         board[row][column] = piece;
     }
 
     public void AI(Player compTeam) {
         /*
+            The AI uses helper methods like this to make everything look nicer. If you don't
+            use helper methods, the whole thing is a mess of for loops. You don't technically need helper
+            methods, but wow does it make things look nice. Has notes currently about problems
+            with them, basically why the ai is still kinda stupid.
+
             See if I'm in check
                 -First possible move to prevent check
             Put them into checkmate
@@ -305,8 +374,9 @@ public class ChessModel implements IChessModel {
                 -Will currently sacrifice a queen for a pawn
             *Protect my piece
                 -Doesn't exist
-            *Move a piece
+            Move a piece
                 -Does exist
+
         */
         if(compInCheckMove(compTeam)){
             setNextPlayer();
@@ -337,20 +407,27 @@ public class ChessModel implements IChessModel {
     }
 
     private boolean compInCheckMove(Player compTeam) {
+        //If it isn't checkmate
         if(!isComplete()) {
+            //But it sure is check
             if(inCheck(compTeam)){
+                //Look through the entire board
                 for(int r = 0; r < 8; r++) {
                     for (int c = 0; c < 8; c++) {
+                        //If that piece isn't null, and is his own
                         if(board[r][c] != null) {
                             if (board[r][c].player() == compTeam) {
 
+                                //Check all their moves
                                 for (int rr = 0; rr < 8; rr++) {
                                     for (int cc = 0; cc < 8; cc++) {
 
                                         Move theoMove = new Move(r, c, rr, cc);
+                                        //If it's a valid move, then move them
                                         if (board[r][c].isValidMove(theoMove, board)) {
                                             move(theoMove);
 
+                                            //If they aren't in check anymore, leave that piece there.
                                             if (!inCheck(currentPlayer())) {
                                                 return true;
                                             }
@@ -370,18 +447,23 @@ public class ChessModel implements IChessModel {
     }
 
     private boolean compCheckmateThem(Player compTeam){
+        //Looks through the whole board
         for(int r = 0; r < 8; r++){
             for(int c = 0; c < 8; c++){
+                //Make sure there is a piece there and it's my piece
                 if(board[r][c] != null) {
                     if (board[r][c].player() == compTeam) {
 
+                        //Check each one of their moves
                         for (int rr = 0; rr < 8; rr++) {
                             for (int cc = 0; cc < 8; cc++) {
+                                //If that move is a valid move, make it.
                                 Move theoMove = new Move(r, c, rr, cc);
                                 if (board[r][c].isValidMove(theoMove, board)) {
                                     //Weird stuff with setNextPlayer, since isComplete checks to see if currentPlayer()
                                     //is in checkmate. Without setNextPlayer, will check if the A. I. is in checkmate
-                                    //except, we want to set them in checkmate
+                                    //except, we want to set them in checkmate. If they are in checkmate, leave that
+                                    //piece there. Else, make it the A. I.'s turn again, undo, and try again
                                     move(theoMove);
                                     setNextPlayer();
                                     if (isComplete()) {
@@ -402,12 +484,14 @@ public class ChessModel implements IChessModel {
     }
 
     private boolean compPutThemInCheck(Player compTeam){
-        //Checks whole board for own pieces
+        //Checks whole board
         for(int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
+                //Makes sure that spot has a piece on it, and it's my piece
                 if (board[r][c] != null) {
                     if (board[r][c].player() == compTeam) {
 
+                        //Check for each of their moves
                         for (int rr = 0; rr < 8; rr++) {
                             for (int cc = 0; cc < 8; cc++) {
 
@@ -416,8 +500,8 @@ public class ChessModel implements IChessModel {
                                 //If that move is valid,
                                 if(board[r][c].isValidMove(theoMove, board)){
                                     move(theoMove);
-                                    //From here, look if I have a move onto the enemy king.
-                                    //If I do, stay here, it's check. Otherwise, go back.
+                                    //move it. If they are in check, leave that piece there.
+                                    //Else, undo it
                                     if(inCheck(Player.WHITE)){
                                         return true;
                                     }
@@ -434,17 +518,22 @@ public class ChessModel implements IChessModel {
     }
 
     private boolean compCanCapture(Player compTeam){
+        //Look through the whole board
         for(int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
+                //If that spot has a piece, and is my piece
                 if (board[r][c] != null) {
                     if (board[r][c].player() == compTeam) {
 
+                        //Look through each one of that piece's moves
                         for (int rr = 0; rr < 8; rr++) {
                             for (int cc = 0; cc < 8; cc++) {
 
+                                //If the spot they are moving unto isn't null, is the enemy team, and is a valid move
                                 Move theoMove = new Move(r, c, rr, cc);
                                 if (board[rr][cc] != null && board[rr][cc].player() != compTeam) {
                                     if(board[r][c].isValidMove(theoMove, board)) {
+                                        //leave that piece there.
                                         move(theoMove);
                                         return true;
                                     }
@@ -462,18 +551,22 @@ public class ChessModel implements IChessModel {
     }
 
     private boolean compRandomMove(Player compTeam) {
+        //Selects random numbers.
         boolean didMove = false;
         int fromR = rand.nextInt(8);
         int fromC = rand.nextInt(8);
         int toR = rand.nextInt(8);
         int toC = rand.nextInt(8);
         Move theoMove = new Move(fromR, fromC, toR, toC);
+        //While we didn't make a good move, keep making random numbers
         while(!didMove) {
+            //If the spot i'm trying to move has a piece, their move is valid, and it is my piece, make the move
             if(board[fromR][fromC] != null && board[fromR][fromC].isValidMove(theoMove, board) && board[fromR][fromC].player() == compTeam) {
                 move(theoMove);
                 System.out.println(theoMove);
                 didMove = true;
                 return didMove;
+                //Else, try again
             } else {
                 fromR = rand.nextInt(8);
                 fromC = rand.nextInt(8);
@@ -482,6 +575,7 @@ public class ChessModel implements IChessModel {
                 theoMove = new Move(fromR, fromC, toR, toC);
             }
         }
+        //Will never return false lol
         return false;
     }
 }

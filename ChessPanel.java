@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 
 /*
- *
+ *`
  * J-Units
  * AI
  *
@@ -275,7 +275,14 @@ public class ChessPanel extends JPanel {
                             firstTurnFlag = true;
                             Move m = new Move(fromRow, fromCol, toRow, toCol);
 
+                            //If the move they tried is valid,
                             if ((model.isValidMove(m)) == true){
+                                //First checks for castle. This is kinda cool imo. Basically, if the king
+                                //tried to move onto the rook, and it was their first moves, and there is no pieces
+                                //between them, it changes to the toCol value for the king to the castle spot. So, after
+                                //you hand the king the isValidMove, m.toColumn changes. Earlier, I set lookingForCastle to
+                                //c. So, if toColumn changed, I'm looking for a castle. And get that done depending on
+                                //where I selected (m.toRow, m.toColumn)
                                 if(m.toColumn != lookingForCastle){
                                     if (m.toRow == 7 && m.toColumn == 6 && model.pieceAt(r, c).type().equals("p3.Rook")){
                                         Move castleMove = new Move(7, 7, 7, 5);
@@ -301,16 +308,24 @@ public class ChessPanel extends JPanel {
                                     }
                                 }
                                 //Promotion!
-                                String promotion = "";
+                                //doesn't matter what you put in here, just needs to be initialized
+                                String promotion = "I love my mother very very much.";
+                                //Makes sure you aren't in check first.
                                 if(!model.inCheck(model.currentPlayer())) {
+                                    //Checks for white/black, so we know which kind of piece to put on. Will do at the end.
+                                    //Asks the player what kind of piece they want. Makes sure it's a correct choice.
+                                    //If they give me a bad choice, we'll ask them again. IF they hit cancel, promotion is null.
+                                    //The do while handles if promotion is null
                                     if (model.currentPlayer() == Player.WHITE) {
                                         if (model.pieceAt(m.fromRow, m.fromColumn).type().equals("p3.Pawn")) {
                                             if (m.toRow == 0){
                                                 while(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
                                                     try {
-                                                        promotion = JOptionPane.showInputDialog(null,
-                                                                "What new piece do you want?\n" +
-                                                                        "Queen, Knight, Rook, Bishop");
+                                                        do{
+                                                            promotion = JOptionPane.showInputDialog(null,
+                                                                    "What new piece do you want?\n" +
+                                                                            "Queen, Knight, Rook, Bishop");
+                                                        }while(promotion == null);
                                                         if (promotion.length() > 2) {
                                                             promotion = promotion.substring(0, 1).toUpperCase() + promotion.substring(1).toLowerCase();
                                                         }
@@ -329,9 +344,11 @@ public class ChessPanel extends JPanel {
                                             if (m.toRow == 7){
                                                 while(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
                                                     try {
-                                                        promotion = JOptionPane.showInputDialog(null,
-                                                                "What new piece do you want?\n" +
-                                                                        "Queen, Knight, Rook, Bishop");
+                                                        do {
+                                                            promotion = JOptionPane.showInputDialog(null,
+                                                                    "What new piece do you want?\n" +
+                                                                            "Queen, Knight, Rook, Bishop");
+                                                        }while(promotion == null);
                                                         if(promotion.length() > 2) {
                                                             promotion = promotion.substring(0, 1).toUpperCase() + promotion.substring(1).toLowerCase();
                                                         }
@@ -348,6 +365,7 @@ public class ChessPanel extends JPanel {
                                         }
                                     }
                                 }
+                                //Do the move, undo check if they are still in check.
                                 model.move(m);
                                 model.undoCheck();
                                 //the promotion has to be done afterwords, or else it'll override what was there,
