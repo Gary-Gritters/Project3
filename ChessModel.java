@@ -397,7 +397,8 @@ public class ChessModel implements IChessModel {
             return;
         }
         if(compIsInDanger(compTeam)){
-
+            setNextPlayer();
+            return;
         }
 
         if(compRandomMove(compTeam)){
@@ -547,7 +548,6 @@ public class ChessModel implements IChessModel {
                                         if(!inCheck(compTeam)){
                                             return true;
                                         }else{
-                                            System.out.println("badmove4");
                                             undo();
                                         }
                                     }
@@ -561,6 +561,60 @@ public class ChessModel implements IChessModel {
         return false;
     }
     private boolean compIsInDanger(Player compTeam){
+        //Look through the whole board
+        for(int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                //If that spot has a piece, and is their piece
+                if (board[r][c] != null) {
+                    if (board[r][c].player() != compTeam) {
+
+                        //Look through each one of that piece's moves
+                        for (int rr = 0; rr < 8; rr++) {
+                            for (int cc = 0; cc < 8; cc++) {
+
+                                //If the spot they are moving unto isn't null, is my guy, and is a valid move
+                                Move theoMove = new Move(r, c, rr, cc);
+                                if (board[rr][cc] != null && board[rr][cc].player() == compTeam) {
+                                    if (board[r][c].isValidMove(theoMove, board)) {
+                                        //Need to move that guy somewhere where he isn't being attacked anymore
+                                        //Looks for all his possible valid moves
+                                        for(int rrr = 0; rrr < 8; rrr++) {
+                                            for (int ccc = 0; ccc < 8; ccc++) {
+                                                //If that move moves him,
+                                                Move doubleTheoMove = new Move(rr, cc, rrr, ccc);
+                                                if(board[rr][cc].isValidMove(doubleTheoMove, board)) {
+                                                    Boolean amISafeHere = true;
+                                                    //Check to see if no enemies have a move onto that square. If they don't, full send it
+                                                    for(int rrrr = 0; rrrr < 8; rrrr++) {
+                                                        for (int cccc = 0; cccc < 8; cccc++) {
+                                                            Move tripleTheoMove = new Move(rrrr, cccc, rrr, ccc);
+                                                            if(board[rrrr][cccc] != null &&  board[rrrr][cccc].player() != compTeam && board[rrrr][cccc].isValidMove(tripleTheoMove, board)){
+                                                                //If they do, I'm not safe and keep checking
+                                                                amISafeHere = false;
+                                                            }
+                                                        }
+                                                    }
+                                                    //IF they don't, check if I'm in check. If I am, keep looking.
+                                                    if(amISafeHere){
+                                                        move(doubleTheoMove);
+                                                        if(inCheck(compTeam)){
+                                                            undo();
+                                                        }else{
+                                                            //If I'm not, good job taht was a fantastic move
+                                                            return true;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -586,7 +640,10 @@ public class ChessModel implements IChessModel {
                 toC = rand.nextInt(8);
                 theoMove = new Move(fromR, fromC, toR, toC);
             }
+            //Makes sure random move won't put the comp into check
             if(inCheck(compTeam)){
+                //Have to reset the move, otherwise it will never hit the else in the if else statement earlier
+                //it will get stuck in an endless loop
                 undo();
                 didMove = false;
                 fromR = rand.nextInt(8);
@@ -594,7 +651,6 @@ public class ChessModel implements IChessModel {
                 toR = rand.nextInt(8);
                 toC = rand.nextInt(8);
                 theoMove = new Move(fromR, fromC, toR, toC);
-                System.out.println("Badmove6");
             }
         }
         //Will never return false lol
