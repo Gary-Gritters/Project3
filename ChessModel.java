@@ -425,7 +425,7 @@ public class ChessModel implements IChessModel {
 
                                         Move theoMove = new Move(r, c, rr, cc);
                                         //If it's a valid move, then move them
-                                        if (board[r][c].isValidMove(theoMove, board)) {
+                                        if (board[r][c].isValidMove(theoMove, board) && disableCastlingEnpassantComputer((theoMove))) {
                                             move(theoMove);
 
                                             //If they aren't in check anymore, leave that piece there.
@@ -460,7 +460,7 @@ public class ChessModel implements IChessModel {
                             for (int cc = 0; cc < 8; cc++) {
                                 //If that move is a valid move, make it.
                                 Move theoMove = new Move(r, c, rr, cc);
-                                if (board[r][c].isValidMove(theoMove, board)) {
+                                if (board[r][c].isValidMove(theoMove, board) && disableCastlingEnpassantComputer(theoMove)) {
                                     //Weird stuff with setNextPlayer, since isComplete checks to see if currentPlayer()
                                     //is in checkmate. Without setNextPlayer, will check if the A. I. is in checkmate
                                     //except, we want to set them in checkmate. If they are in checkmate, leave that
@@ -499,7 +499,7 @@ public class ChessModel implements IChessModel {
                                 //Checks for each of those pieces moves
                                 Move theoMove = new Move(r, c, rr, cc);
                                 //If that move is valid,
-                                if(board[r][c].isValidMove(theoMove, board)){
+                                if(board[r][c].isValidMove(theoMove, board) && disableCastlingEnpassantComputer(theoMove)){
                                     move(theoMove);
                                     //move it. If they are in check, leave that piece there.
                                     //Else, undo it
@@ -542,7 +542,7 @@ public class ChessModel implements IChessModel {
                                 //If the spot they are moving unto isn't null, is the enemy team, and is a valid move
                                 Move theoMove = new Move(r, c, rr, cc);
                                 if (board[rr][cc] != null && board[rr][cc].player() != compTeam) {
-                                    if(board[r][c].isValidMove(theoMove, board)) {
+                                    if(board[r][c].isValidMove(theoMove, board) && disableCastlingEnpassantComputer(theoMove)) {
                                         //leave that piece there.
                                         move(theoMove);
                                         if(!inCheck(compTeam)){
@@ -575,20 +575,21 @@ public class ChessModel implements IChessModel {
                                 //If the spot they are moving unto isn't null, is my guy, and is a valid move
                                 Move theoMove = new Move(r, c, rr, cc);
                                 if (board[rr][cc] != null && board[rr][cc].player() == compTeam) {
-                                    if (board[r][c].isValidMove(theoMove, board)) {
+                                    if (board[r][c].isValidMove(theoMove, board) && disableCastlingEnpassantComputer(theoMove)) {
                                         //Need to move that guy somewhere where he isn't being attacked anymore
                                         //Looks for all his possible valid moves
                                         for(int rrr = 0; rrr < 8; rrr++) {
                                             for (int ccc = 0; ccc < 8; ccc++) {
                                                 //If that move moves him,
                                                 Move doubleTheoMove = new Move(rr, cc, rrr, ccc);
-                                                if(board[rr][cc].isValidMove(doubleTheoMove, board)) {
+                                                if(board[rr][cc].isValidMove(doubleTheoMove, board) && disableCastlingEnpassantComputer(doubleTheoMove)) {
                                                     Boolean amISafeHere = true;
                                                     //Check to see if no enemies have a move onto that square. If they don't, full send it
                                                     for(int rrrr = 0; rrrr < 8; rrrr++) {
                                                         for (int cccc = 0; cccc < 8; cccc++) {
                                                             Move tripleTheoMove = new Move(rrrr, cccc, rrr, ccc);
-                                                            if(board[rrrr][cccc] != null &&  board[rrrr][cccc].player() != compTeam && board[rrrr][cccc].isValidMove(tripleTheoMove, board)){
+                                                            if(board[rrrr][cccc] != null &&  board[rrrr][cccc].player() != compTeam &&
+                                                                    board[rrrr][cccc].isValidMove(tripleTheoMove, board) && disableCastlingEnpassantComputer(tripleTheoMove)){
                                                                 //If they do, I'm not safe and keep checking
                                                                 amISafeHere = false;
                                                             }
@@ -600,7 +601,7 @@ public class ChessModel implements IChessModel {
                                                         if(inCheck(compTeam)){
                                                             undo();
                                                         }else{
-                                                            //If I'm not, good job taht was a fantastic move
+                                                            //If I'm not, good job that was a fantastic move
                                                             return true;
                                                         }
                                                     }
@@ -629,7 +630,8 @@ public class ChessModel implements IChessModel {
         //While we didn't make a good move, keep making random numbers
         while(!didMove) {
             //If the spot i'm trying to move has a piece, their move is valid, and it is my piece, make the move
-            if(board[fromR][fromC] != null && board[fromR][fromC].isValidMove(theoMove, board) && board[fromR][fromC].player() == compTeam) {
+            if(board[fromR][fromC] != null && board[fromR][fromC].isValidMove(theoMove, board)
+                    && board[fromR][fromC].player() == compTeam && disableCastlingEnpassantComputer(theoMove)) {
                 move(theoMove);
                 didMove = true;
                 //Else, try again
@@ -655,5 +657,21 @@ public class ChessModel implements IChessModel {
         }
         //Will never return false lol
         return didMove;
+    }
+    private boolean disableCastlingEnpassantComputer(Move move) {
+        boolean valid = true;
+        if (board[move.fromRow][move.fromColumn].type().equals("p3.King")) {
+            if (Math.abs(move.fromColumn - move.toColumn) > 1) {
+                return false;
+            }
+        }
+        if (board[move.fromRow][move.fromColumn].type().equals("p3.Pawn")) {
+            if (Math.abs(move.fromRow - move.toRow) == 1 && Math.abs(move.fromColumn - move.toColumn) == 1) {
+                if (board[move.toRow][move.toColumn] == null) {
+                    return false;
+                }
+            }
+        }
+        return valid;
     }
 }
