@@ -5,13 +5,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
-/*
- *`
- * J-Units
- * AI
- *
+/**
+ * This class creates the code for the GUI for the Chess game.
+ * @author Gary Gritters, Jacob Dec, and Ross Kuiper
+ * @version 1.0
+ * @date 3/26/2019
  */
+
 public class ChessPanel extends JPanel {
 
     private JButton[][] board;
@@ -34,6 +34,10 @@ public class ChessPanel extends JPanel {
     private boolean didIPromote;
     private listener listener;
     private undoListener undoListener;
+
+    /**
+     * This is the constructor for the ChessPanel class.
+     */
 
     public ChessPanel() {
 
@@ -70,9 +74,13 @@ public class ChessPanel extends JPanel {
         undo.addActionListener(undoListener);
         buttonpanel.add(undo);
         firstTurnFlag = true;
-
-
     }
+
+    /**
+     * This method sets the color of a specific tile.
+     * @param r the row of the tile.
+     * @param c the column of the tile.
+     */
 
     private void setBackGroundColor(int r, int c) {
         if ((c % 2 == 1 && r % 2 == 0) || (c % 2 == 0 && r % 2 == 1)) {
@@ -82,8 +90,15 @@ public class ChessPanel extends JPanel {
         }
     }
 
+    /**
+     * This tile places the pieces on the board.
+     * @param r row for the piece.
+     * @param c column for the piece.
+     */
+
     private void placePieces(int r, int c) {
 
+        //place pawns
         if (model.pieceAt(r, c).type().equals("p3.Pawn")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wPawn);
@@ -95,6 +110,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
+        //place rooks
         if (model.pieceAt(r, c).type().equals("p3.Rook")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wRook);
@@ -106,6 +122,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
+        //place knights
         if (model.pieceAt(r, c).type().equals("p3.Knight")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wKnight);
@@ -117,6 +134,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
+        //place bishops
         if (model.pieceAt(r, c).type().equals("p3.Bishop")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wBishop);
@@ -128,6 +146,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
+        //place queens
         if (model.pieceAt(r, c).type().equals("p3.Queen")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wQueen);
@@ -139,6 +158,7 @@ public class ChessPanel extends JPanel {
             }
         }
 
+        //place kings
         if (model.pieceAt(r, c).type().equals("p3.King")) {
             if(model.pieceAt(r, c).player() == Player.WHITE) {
                 board[r][c] = new JButton(null, wKing);
@@ -151,6 +171,10 @@ public class ChessPanel extends JPanel {
         }
     }
 
+    /**
+     * This method sets up the icons for each piece.
+     */
+
     private void createIcons() {
         // Sets the Image for white player pieces
         wRook = new ImageIcon(getClass().getResource("wRook.png"));
@@ -160,6 +184,7 @@ public class ChessPanel extends JPanel {
         wPawn = new ImageIcon(getClass().getResource("wPawn.png"));
         wKnight = new ImageIcon(getClass().getResource("wKnight.png"));
 
+        // Sets teh Image for black player pieces
         bRook = new ImageIcon(getClass().getResource("bRook.png"));
         bBishop = new ImageIcon(getClass().getResource("bBishop.png"));
         bQueen = new ImageIcon(getClass().getResource("bQueen.png"));
@@ -168,7 +193,10 @@ public class ChessPanel extends JPanel {
         bKnight = new ImageIcon(getClass().getResource("bKnight.png"));
     }
 
-    // method that updates the board
+    /**
+     * This method updates the GUI.
+     */
+
     private void displayBoard() {
 
         for (int r = 0; r < 8; r++) {
@@ -218,7 +246,17 @@ public class ChessPanel extends JPanel {
         repaint();
     }
 
+    /**
+     * This class checks to see if the undo button has been pushed.
+     */
+
     private class undoListener implements ActionListener {
+
+        /**
+         * This method runs if the undo button is pushed.
+         * @param event if the undo button is pushed.
+         */
+
         public void actionPerformed(ActionEvent event) {
             if(undo == event.getSource()){
 
@@ -237,14 +275,21 @@ public class ChessPanel extends JPanel {
         }
     }
 
+    /**
+     * This class checks if other mouse events happen.
+     */
 
-
-    // inner class that represents action listener for buttons
     private class listener implements ActionListener {
+
+        /**
+         * This method checks for a mouse event and determines what to do for each event.
+         * @param event the mouse event.
+         */
+
         public void actionPerformed(ActionEvent event) {
             didIPromote = false;
 
-            //For loop checks for where the palyer clicked
+            //For loop checks for where the player clicked
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
                     if (board[r][c] == event.getSource())
@@ -397,9 +442,9 @@ public class ChessPanel extends JPanel {
 
                                 }
 
-                               /* if(model.currentPlayer() == Player.BLACK){
+                                if(model.currentPlayer() == Player.BLACK){
                                     model.AI(Player.BLACK);
-                                }*/
+                                }
 
                             }
 

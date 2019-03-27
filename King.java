@@ -1,25 +1,60 @@
 package p3;
 
+/**
+ * This class models the functionality of the king in the chess game
+ * It does this by extending the ChessPiece class.
+ * @author Gary Gritters, Jacob Dec, and Ross Kuiper
+ * @version 1.0
+ * @date 3/26/2019
+ */
+
 public class King extends ChessPiece {
 
     Integer moveCount;
+
+    /**
+     * This is the constructor for the king class
+     * @param player determines which player the king is for
+     */
 
     public King(Player player) {
         super(player);
         moveCount = 0;
     }
 
+    /**
+     * This method tells what type of piece the king is.
+     * @return p3.King
+     */
+
     public String type() {
         return "p3.King";
     }
+
+    /**
+     * This method changes the number of moves the king has done.
+     * @param i number of moves.
+     */
 
     public void changeMoveCount(int i){
         moveCount += i;
     }
 
+    /**
+     * This method returns the move count.
+     * @return moveCount
+     */
+
     public Integer getMoveCount(){
         return moveCount;
     }
+
+    /**
+     * This method determines what a valid move is for the king.
+     * @param move The move which the king is trying to make.
+     * @param board The current board state.
+     * @return Whether or not it is a valid move.
+     */
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {
         boolean valid = true;
@@ -100,32 +135,6 @@ public class King extends ChessPiece {
             }
         }
 
-        //IChessPiece[][] board2 = new IChessPiece[8][8];
-
-        /*
-        for(int r = 0; r < 8; r++){
-            for(int c = 0; c < 8; c++){
-                board2[r][c] = board[r][c];
-            }
-        }
-        for(int r = 0; r < 8; r++){
-            for(int c = 0; c < 8; c++){
-                if(board[r][c] != null) {
-                    if (board[r][c].player() != board[move.fromRow][move.fromColumn].player()) {
-                        Move opponentMove = new Move(r,c, move.toRow, move.toColumn);
-
-                        board2[move.toRow][move.toColumn] = null;
-                        if (!board[r][c].type().equals("p3.King") && board2[r][c] != null && board2[r][c].isValidMove(opponentMove, board)) {
-                            valid = false;
-                        }
-                        //board[move.toRow][move.toColumn] = board2[0];
-                    }
-                }
-
-            }
-        }
-        */
-        //System.out.println(isFirstMove);
         return valid;
 
     }

@@ -1,26 +1,60 @@
 package p3;
 
+/**
+ * This class models the functionality of the knight in the chess game
+ * It does this by extending the ChessPiece class.
+ * @author Gary Gritters, Jacob Dec, and Ross Kuiper
+ * @version 1.0
+ * @date 3/26/2019
+ */
+
 public class Knight extends ChessPiece {
 
     Integer moveCount;
+
+    /**
+     * This is the constructor for the knight class.
+     * @param player determines which player the knight is for.
+     */
 
     public Knight(Player player) {
         super(player);
         moveCount = 0;
     }
 
+    /**
+     * This method tells what type of piece the knight is.
+     * @return p3.Knight
+     */
+
     public String type() {
         return "p3.Knight";
     }
 
+    /**
+     * This method changes the number of moves the knight has done.
+     * @param i number of moves.
+     */
 
     public void changeMoveCount(int i){
         moveCount += i;
     }
 
+    /**
+     * This method returns the move count.
+     * @return moveCount
+     */
+
     public Integer getMoveCount(){
         return moveCount;
     }
+
+    /**
+     * This method determines what a valid move is for the knight.
+     * @param move The move which the knight is trying to make.
+     * @param board The current board state.
+     * @return Whether or not it is a valid move.
+     */
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {
 

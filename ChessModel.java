@@ -3,6 +3,14 @@ package p3;
 import java.util.Random;
 import java.util.Stack;
 
+/**
+ * This class models the functionality of the actual chess game.
+ * It does so by extending IChessModel.
+ * @author Gary Gritters, Jacob Dec, and Ross Kuiper
+ * @version 1.0
+ * @date 3/26/2019
+ */
+
 public class ChessModel implements IChessModel {
     private IChessPiece[][] board;
     private Player player;
@@ -18,6 +26,10 @@ public class ChessModel implements IChessModel {
 
     // declare other instance variables as needed
     private Random rand;
+
+    /**
+     * This is the constructor for the ChessModel class.
+     */
 
     public ChessModel() {
         status = GUIcodes.NoMessage;
@@ -67,18 +79,29 @@ public class ChessModel implements IChessModel {
         player = Player.WHITE;
     }
 
+    /**
+     * This method checks to see if a pawn has been promoted and adds it to a stack if it has.
+     * @param f if the pawn has been promoted or not.
+     */
+
     public void pawnPromotionCheck(boolean f){
         promoted.push(f);
     }
+
+    /**
+     * This method removes an entry from the pawn promotion stack for undo purposes.
+     */
 
     public void promotePop(){
         promoted.pop();
     }
 
 
-    //Method to look for checkmate.
-    //Note: use's current player. Checkmate works since in panel, we call it after
-    //someone made a move and the turn got switched over to the player who is currently in check
+    /**
+     * This method checks to see if the current player has been checkmated.
+     * @return if checkmate
+     */
+
     public boolean isComplete() {
         boolean valid = false;
 
@@ -130,7 +153,12 @@ public class ChessModel implements IChessModel {
         return true;
     }
 
-    //Uses's each pieces valid move. Makes sure it's an actual piece and that person's piece
+    /**
+     * This method checks whether a move is valid using the given piece.
+     * @param move the move that
+     * @return if the move is valid.
+     */
+
     public boolean isValidMove(Move move) {
         boolean valid = false;
 
@@ -142,12 +170,19 @@ public class ChessModel implements IChessModel {
         return valid;
     }
 
-    //We use this to make sure there is something in the prevMoves stack
+    /**
+     * This method determines if there is a previous move.
+     * @return if there is a previous move.
+     */
+
     public Boolean prevMoveExists(){
         return prevMoves.size() != 0;
     }
 
-    //This is our undo move. Oh boy. there is a lot in here.
+    /**
+     * This method goes backwards one move.
+     */
+
     public void undo(){
         // If a previous move exists
         if(prevMoves.size() > 0){
@@ -229,7 +264,11 @@ public class ChessModel implements IChessModel {
         }
     }
 
-    //Move!
+    /**
+     * This method moves a piece.
+     * @param move the move to be made.
+     */
+
     public void move(Move move) {
         //Creates some variables for enPassant that we'll need
         Move enPassant;
@@ -286,6 +325,11 @@ public class ChessModel implements IChessModel {
         }
     }
 
+    /**
+     * Determines whether a player is in check.
+     * @param p The player which is being checked.
+     * @return if the player is in check.
+     */
 
     public boolean inCheck(Player p){
 
@@ -321,9 +365,12 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
+    /**
+     * This method does not allow a player to end their turn in check
+     * It does this by undoing their move if they are in check at the end of their turn.
+     */
+
     public void undoCheck(){
-        //Helper method. Basically prevents a piece from ending their turn still in check.
-        //If they tried to, undo their turn and give them another shot.
         if (inCheck(currentPlayer())){
             undo();
             setNextPlayer();
@@ -331,57 +378,78 @@ public class ChessModel implements IChessModel {
         }
     }
 
+    /**
+     * This method returns the current player.
+     * @return current player.
+     */
+
     public Player currentPlayer() {
         return player;
     }
+
+    /**
+     * This method returns the number of rows in the chess board.
+     * @return 8
+     */
 
     public int numRows() {
         return 8;
     }
 
+    /**
+     * This method returns the number of columns in the chess board.
+     * @return 8
+     */
+
     public int numColumns() {
         return 8;
     }
 
-    //Returns a piece at a spot
+    /**
+     * This method returns the piece at the given location.
+     * @param row on the chess board.
+     * @param column on the chess board.
+     * @return the piece.
+     */
+
     public IChessPiece pieceAt(int row, int column) {
         return board[row][column];
     }
+
+    /**
+     * This methods sets the turn to the other player.
+     */
 
     public void setNextPlayer() {
         player = player.next();
     }
 
-    //Changes a piece at a spot. Used for promotion.
+    /**
+     * This method changes the piece at the given location to a different type.
+     * This is used for promotion.
+     * @param row on the chess board.
+     * @param column on the chess board
+     * @param piece to change to.
+     */
+
     public void setPiece(int row, int column, IChessPiece piece) {
         board[row][column] = piece;
     }
 
+    /**
+     * This method runs an AI for one chess player.
+     * It uses helper methods to determine which move it should make.
+     * The methods are placed in the order of importance.
+     * @param compTeam what player the AI is.
+     */
+
     public void AI(Player compTeam) {
-        /*
-            The AI uses helper methods like this to make everything look nicer. If you don't
-            use helper methods, the whole thing is a mess of for loops. You don't technically need helper
-            methods, but wow does it make things look nice. Has notes currently about problems
-            with them, basically why the ai is still kinda stupid.
 
-            See if I'm in check
-                -First possible move to prevent check
-            Put them into checkmate
-                -Doesn't display a message until white tries to move
-            Put them into check
-                -Doesn't account for dumb move and losing a piece
-            Take their piece
-                -Will currently sacrifice a queen for a pawn
-            *Protect my piece
-                -Doesn't exist
-            Move a piece
-                -Does exist
-
-        */
         if(compInCheckMove(compTeam)){
             setNextPlayer();
             return;
         }
+
         if(compCheckmateThem(compTeam)){
             setNextPlayer();
             return;
@@ -396,6 +464,7 @@ public class ChessModel implements IChessModel {
             setNextPlayer();
             return;
         }
+
         if(compIsInDanger(compTeam)){
             setNextPlayer();
             return;
@@ -407,10 +476,18 @@ public class ChessModel implements IChessModel {
         }
     }
 
+    //The remaining methods are the AI helper methods.
+
+    /**
+     * Check if the AI is in check. If so, move out of check.
+     * @param compTeam which player the AI is.
+     * @return if the AI moved out of check.
+     */
+
     private boolean compInCheckMove(Player compTeam) {
         //If it isn't checkmate
         if(!isComplete()) {
-            //But it sure is check
+            //But it is check
             if(inCheck(compTeam)){
                 //Look through the entire board
                 for(int r = 0; r < 8; r++) {
@@ -446,6 +523,12 @@ public class ChessModel implements IChessModel {
         }
         return false;
     }
+
+    /**
+     * Check if the AI can checkmate the other player. If so, do so.
+     * @param compTeam which player the AI is.
+     * @return if the AI checkmated the other player.
+     */
 
     private boolean compCheckmateThem(Player compTeam){
         //Looks through the whole board
@@ -483,6 +566,12 @@ public class ChessModel implements IChessModel {
         }
         return false;
     }
+
+    /**
+     * Check if the AI can put the other player in check.
+     * @param compTeam which player the AI is.
+     * @return if the AI put the other player in check.
+     */
 
     private boolean compPutThemInCheck(Player compTeam){
         //Checks whole board
@@ -527,6 +616,12 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
+    /**
+     * Check if the AI can capture one of the other player's pieces.
+     * @param compTeam which player the AI is.
+     * @return if the AI captured an enemy piece.
+     */
+
     private boolean compCanCapture(Player compTeam){
         //Look through the whole board
         for(int r = 0; r < 8; r++) {
@@ -560,6 +655,13 @@ public class ChessModel implements IChessModel {
         }
         return false;
     }
+
+    /**
+     * Check if the enemy can take an AI piece.
+     * @param compTeam which player the AI is.
+     * @return if the AI avoided danger.
+     */
+
     private boolean compIsInDanger(Player compTeam){
         //Look through the whole board
         for(int r = 0; r < 8; r++) {
@@ -619,6 +721,12 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
+    /**
+     * Move a random piece if nothing else is important.
+     * @param compTeam which player the AI is.
+     * @return true because it can never return false.
+     */
+
     private boolean compRandomMove(Player compTeam) {
         //Selects random numbers.
         boolean didMove = false;
@@ -655,9 +763,17 @@ public class ChessModel implements IChessModel {
                 theoMove = new Move(fromR, fromC, toR, toC);
             }
         }
-        //Will never return false lol
+        //Will never return false so that the AI always moves
+        //However it will not compile without this statement
         return didMove;
     }
+
+    /**
+     * This method dissallows castling and enpassant for the AI.
+     * @param move the move to check if it should be dissallowed.
+     * @return whether or not the move is dissallowed.
+     */
+
     private boolean disableCastlingEnpassantComputer(Move move) {
         boolean valid = true;
         if (board[move.fromRow][move.fromColumn].type().equals("p3.King")) {

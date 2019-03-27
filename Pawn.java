@@ -1,9 +1,22 @@
 package p3;
 
+/**
+ * This class models the functionality of the pawn in the chess game
+ * It does this by extending the ChessPiece class.
+ * @author Gary Gritters, Jacob Dec, and Ross Kuiper
+ * @version 1.0
+ * @date 3/26/2019
+ */
+
 public class Pawn extends ChessPiece {
 
     Integer moveCount;
     Boolean didEnpassant;
+
+    /**
+     * This is the constructor for the pawn class.
+     * @param player determines which player the pawn is for.
+     */
 
     public Pawn(Player player) {
         super(player);
@@ -11,17 +24,39 @@ public class Pawn extends ChessPiece {
         didEnpassant = false;
     }
 
+    /**
+     * This method tells what type of piece the pawn is.
+     * @return p3.Pawn
+     */
+
     public String type() {
         return "p3.Pawn";
     }
+
+    /**
+     * This method changes the number of moves the pawn has done.
+     * @param i number of moves.
+     */
 
     public void changeMoveCount(int i) {
         moveCount += i;
     }
 
+    /**
+     * This method returns the move count.
+     * @return moveCount
+     */
+
     public Integer getMoveCount() {
         return moveCount;
     }
+
+    /**
+     * Determines if the pawn can en passant left.
+     * @param move the move the pawn is trying to do.
+     * @param board the current board state.
+     * @return if the pawn can en passant
+     */
 
     public boolean isEnpasLeft(Move move, IChessPiece[][] board) {
         if (move.fromColumn == 0) {
@@ -37,6 +72,13 @@ public class Pawn extends ChessPiece {
             return true;
         return false;
     }
+
+    /**
+     * Determines if the pawn can en passant right.
+     * @param move the move the pawn is trying to do.
+     * @param board the current board state.
+     * @return if the pawn can en passant
+     */
 
     public boolean isEnpasRight(Move move, IChessPiece[][] board) {
         if (move.fromColumn == 7) {
@@ -56,8 +98,13 @@ public class Pawn extends ChessPiece {
         return false;
         }
 
+        /**
+        * This method determines what a valid move is for the pawn.
+        * @param move The move which the pawn is trying to make.
+        * @param board The current board state.
+        * @return Whether or not it is a valid move.
+        */
 
-        // determines if the move is valid for a pawn piece
         public boolean isValidMove (Move move, IChessPiece[][]board){
             boolean valid = true;
             boolean homerow = false;
