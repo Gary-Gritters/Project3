@@ -137,10 +137,10 @@ public class ChessModelTest {
         int counter = 0;
 
         //Runs through the first 6 moves of 500 AI ran games
-        for(int i=0; i < 500; i++){
+        for(int i=0; i < 5000; i++){
 
             //Continues while not in checkmate or met counter limit
-            while (!model.isComplete() && counter < 6) {
+            while (!model.isComplete() && counter < 10) {
 
                 // While White is not in checkmate
                 if (!model.isComplete()) {

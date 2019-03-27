@@ -489,8 +489,10 @@ public class ChessPanel extends JPanel {
 
                                 }
 
-                                if(model.currentPlayer() == Player.BLACK){
-                                    model.AI(Player.BLACK);
+                                if(!model.isComplete()) {
+                                    if (model.currentPlayer() == Player.BLACK) {
+                                        model.AI(Player.BLACK);
+                                    }
                                 }
 
                             }

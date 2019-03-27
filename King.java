@@ -96,7 +96,7 @@ public class King extends ChessPiece {
                 (move.toRow == 7 && move.toColumn == 7) &&
                 ((moveCount == 0) && (board[7][7] != null) &&
                         (board[7][7].getMoveCount() == 0))){
-            for(int i = 6; i < 4; i--){
+            for(int i = 6; i > 4; i--){
                 if(board[7][i] != null){
                     valid = false;
                 }
@@ -122,7 +122,7 @@ public class King extends ChessPiece {
                 move.toColumn == 7) && ((moveCount == 0) &&
                 (board[0][7] != null) &&
                 (board[0][7].getMoveCount() == 0))){
-            for(int i = 6; i < 4; i--){
+            for(int i = 6; i > 4; i--){
                 if(board[0][i] != null){
                     valid = false;
                 }
