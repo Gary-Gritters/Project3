@@ -31,7 +31,7 @@ public class ChessPanel extends JPanel {
     private int toCol;
     // declare other instance variables as needed
 
-    private boolean didIPromote;
+    private boolean isPromo;
     private listener listener;
     private undoListener undoListener;
 
@@ -49,16 +49,19 @@ public class ChessPanel extends JPanel {
 
         JPanel boardpanel = new JPanel();
         JPanel buttonpanel = new JPanel();
-        boardpanel.setLayout(new GridLayout(model.numRows(), model.numColumns(), 1, 1));
+        boardpanel.setLayout(new GridLayout(model.numRows(),
+                model.numColumns(), 1, 1));
 
         for (int r = 0; r < model.numRows(); r++) {
             for (int c = 0; c < model.numColumns(); c++) {
                 if (model.pieceAt(r, c) == null) {
                     board[r][c] = new JButton("", null);
                     board[r][c].addActionListener(listener);
-                } else if (model.pieceAt(r, c).player() == Player.WHITE) {
+                } else if (model.pieceAt(r, c).player() ==
+                        Player.WHITE) {
                     placePieces(r, c);
-                } else if (model.pieceAt(r, c).player() == Player.BLACK) {
+                } else if (model.pieceAt(r, c).player() ==
+                        Player.BLACK) {
                     placePieces(r, c);
                 }
 
@@ -83,9 +86,11 @@ public class ChessPanel extends JPanel {
      */
 
     private void setBackGroundColor(int r, int c) {
-        if ((c % 2 == 1 && r % 2 == 0) || (c % 2 == 0 && r % 2 == 1)) {
+        if ((c % 2 == 1 && r % 2 == 0) ||
+                (c % 2 == 0 && r % 2 == 1)) {
             board[r][c].setBackground(Color.LIGHT_GRAY);
-        } else if ((c % 2 == 0 && r % 2 == 0) || (c % 2 == 1 && r % 2 == 1)) {
+        } else if ((c % 2 == 0 && r % 2 == 0) ||
+                (c % 2 == 1 && r % 2 == 1)) {
             board[r][c].setBackground(Color.WHITE);
         }
     }
@@ -282,12 +287,13 @@ public class ChessPanel extends JPanel {
     private class listener implements ActionListener {
 
         /**
-         * This method checks for a mouse event and determines what to do for each event.
+         * This method checks for a mouse event and determines
+         * what to do for each event.
          * @param event the mouse event.
          */
 
         public void actionPerformed(ActionEvent event) {
-            didIPromote = false;
+            isPromo = false;
 
             //For loop checks for where the player clicked
             for (int r = 0; r < model.numRows(); r++)
@@ -303,12 +309,15 @@ public class ChessPanel extends JPanel {
                             board[r][c].setBackground(Color.GREEN);
 
                             // Piece movement diagnostic
-                            for (int rr = 0; rr < model.numRows(); rr++) {
-                                for (int cc = 0; cc < model.numColumns(); cc++) {
+                            for (int rr = 0;
+                                 rr < model.numRows(); rr++) {
+                                for (int cc = 0;
+                                     cc < model.numColumns(); cc++) {
                                     Move m = new Move(r, c, rr,cc);
 
                                     if(model.isValidMove(m)){
-                                        board[rr][cc].setBackground(Color.BLUE);
+                                        board[rr][cc].
+                                                setBackground(Color.BLUE);
                                     }
                                 }
                                 }
@@ -322,115 +331,153 @@ public class ChessPanel extends JPanel {
 
                             //If the move they tried is valid,
                             if ((model.isValidMove(m)) == true){
-                                //First checks for castle. This is kinda cool imo. Basically, if the king
-                                //tried to move onto the rook, and it was their first moves, and there is no pieces
-                                //between them, it changes to the toCol value for the king to the castle spot. So, after
-                                //you hand the king the isValidMove, m.toColumn changes. Earlier, I set lookingForCastle to
-                                //c. So, if toColumn changed, I'm looking for a castle. And get that done depending on
-                                //where I selected (m.toRow, m.toColumn)
+
+                                //First checks for castle. Basically,
+                                // if the king tried to move onto the
+                                // rook, and it was their first moves,
+                                // and there is no pieces between them,
+                                // it changes to the toCol value for
+                                // the king to the castle spot. So,
+                                // after you hand the king the
+                                // isValidMove, m.toColumn changes.
+                                // Earlier, I set lookingForCastle to
+                                // c. So, if toColumn changed, I'm
+                                // looking for a castle. And get that
+                                // done depending on where I selected
+                                // (m.toRow, m.toColumn)
                                 if(m.toColumn != lookingForCastle){
-                                    if (m.toRow == 7 && m.toColumn == 6 && model.pieceAt(r, c).type().equals("p3.Rook")){
-                                        Move castleMove = new Move(7, 7, 7, 5);
+                                    if (m.toRow == 7 && m.toColumn ==
+                                            6 && model.pieceAt(r, c).
+                                            type().equals("p3.Rook")){
+                                        Move castleMove =
+                                                new Move(7, 7, 7, 5);
                                         model.move(castleMove);
                                     }
                                 }
                                 if(m.toColumn != lookingForCastle){
-                                    if (m.toRow == 7 && m.toColumn == 2 && model.pieceAt(r, c).type().equals("p3.Rook")){
+                                    if (m.toRow == 7 && m.toColumn == 2
+                                            && model.pieceAt(r, c).
+                                            type().equals("p3.Rook")){
                                         Move castleMove = new Move(7, 0, 7, 3);
                                         model.move(castleMove);
                                     }
                                 }
                                 if(m.toColumn != lookingForCastle){
-                                    if (m.toRow == 0 && m.toColumn == 6 && model.pieceAt(r, c).type().equals("p3.Rook")){
+                                    if (m.toRow == 0 && m.toColumn == 6
+                                            && model.pieceAt(r, c).
+                                            type().equals("p3.Rook")){
                                         Move castleMove = new Move(0, 7, 0, 5);
                                         model.move(castleMove);
                                     }
                                 }
                                 if(m.toColumn != lookingForCastle){
-                                    if (m.toRow == 0 && m.toColumn == 2 && model.pieceAt(r, c).type().equals("p3.Rook")){
+                                    if (m.toRow == 0 && m.toColumn == 2
+                                            && model.pieceAt(r, c).
+                                            type().equals("p3.Rook")){
                                         Move castleMove = new Move(0, 0, 0, 3);
                                         model.move(castleMove);
                                     }
                                 }
                                 //Promotion!
-                                //doesn't matter what you put in here, just needs to be initialized
-                                String promotion = "I love my mother very very much.";
+                                //doesn't matter what you put in
+                                // here, just needs to be initialized
+                                String promo = "";
+
                                 //Makes sure you aren't in check first.
-                                if(!model.inCheck(model.currentPlayer())) {
-                                    //Checks for white/black, so we know which kind of piece to put on. Will do at the end.
-                                    //Asks the player what kind of piece they want. Makes sure it's a correct choice.
-                                    //If they give me a bad choice, we'll ask them again. IF they hit cancel, promotion is null.
-                                    //The do while handles if promotion is null
-                                    if (model.currentPlayer() == Player.WHITE) {
-                                        if (model.pieceAt(m.fromRow, m.fromColumn).type().equals("p3.Pawn")) {
+                                if(!model.inCheck(model.
+                                        currentPlayer())) {
+
+                                    //Checks for white/black, so we
+                                    // know which kind of piece to put
+                                    // on. Will do at the end. Asks the
+                                    // player what kind of piece they
+                                    // want. Makes sure it's a correct
+                                    // choice. If they give me a bad
+                                    // choice, we'll ask them again. IF
+                                    // they hit cancel, promotion is
+                                    // null. The do while handles if
+                                    // promotion is null
+                                    if (model.currentPlayer() ==
+                                            Player.WHITE) {
+                                        if (model.pieceAt(m.fromRow,
+                                                m.fromColumn).type().
+                                                equals("p3.Pawn")) {
                                             if (m.toRow == 0){
-                                                while(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
+                                                while(!promo.
+                                                        equals("Queen") && !promo.equals("Knight") && !promo.equals("Rook") && !promo.equals("Bishop")) {
                                                     try {
                                                         do{
-                                                            promotion = JOptionPane.showInputDialog(null,
+                                                            promo = JOptionPane.showInputDialog(null,
                                                                     "What new piece do you want?\n" +
                                                                             "Queen, Knight, Rook, Bishop");
-                                                        }while(promotion == null);
-                                                        if (promotion.length() > 2) {
-                                                            promotion = promotion.substring(0, 1).toUpperCase() + promotion.substring(1).toLowerCase();
+                                                        }while(promo == null);
+                                                        if (promo.length() > 2) {
+                                                            promo = promo.substring(0, 1).toUpperCase() + promo.substring(1).toLowerCase();
                                                         }
                                                     } catch (IllegalArgumentException e) {
                                                         throw e;
                                                     }
-                                                    if (!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
+                                                    if (!promo.equals("Queen") && !promo.equals("Knight") && !promo.equals("Rook") && !promo.equals("Bishop")) {
                                                         JOptionPane.showMessageDialog(null, "Give me a proper answer");
                                                     }
                                                 }
-                                                didIPromote = true;
+                                                isPromo = true;
                                             }
                                         }
                                     } else {
                                         if (model.pieceAt(m.fromRow, m.fromColumn).type().equals("p3.Pawn")) {
                                             if (m.toRow == 7){
-                                                while(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")) {
+                                                while(!promo.equals("Queen") && !promo.equals("Knight") && !promo.equals("Rook") && !promo.equals("Bishop")) {
                                                     try {
                                                         do {
-                                                            promotion = JOptionPane.showInputDialog(null,
+                                                            promo = JOptionPane.showInputDialog(null,
                                                                     "What new piece do you want?\n" +
                                                                             "Queen, Knight, Rook, Bishop");
-                                                        }while(promotion == null);
-                                                        if(promotion.length() > 2) {
-                                                            promotion = promotion.substring(0, 1).toUpperCase() + promotion.substring(1).toLowerCase();
+                                                        }while(promo == null);
+                                                        if(promo.length() > 2) {
+                                                            promo = promo.substring(0, 1).toUpperCase() + promo.substring(1).toLowerCase();
                                                         }
                                                     }catch(IllegalArgumentException e){
                                                         throw e;
                                                     }
-                                                    if(!promotion.equals("Queen") && !promotion.equals("Knight") && !promotion.equals("Rook") && !promotion.equals("Bishop")){
+                                                    if(!promo.equals("Queen") && !promo.equals("Knight") && !promo.equals("Rook") && !promo.equals("Bishop")){
                                                         JOptionPane.showMessageDialog(null, "Give me a proper answer");
                                                     }
                                                 }
-                                                didIPromote = true;
+                                                isPromo = true;
 
                                             }
                                         }
                                     }
                                 }
-                                //Do the move, undo check if they are still in check.
+                                //Do the move, undo check if they are
+                                // still in check.
                                 model.move(m);
                                 model.undoCheck();
-                                //the promotion has to be done afterwords, or else it'll override what was there,
-                                // and then move the pawn there. effectively, the pawn captures what it was
-                                // supposed to be turned into if this if statement is before move
-                                if(didIPromote == true) {
+
+                                //the promotion has to be done
+                                // afterwords, or else it'll override
+                                // what was there, and then move the
+                                // pawn there. effectively, the pawn
+                                // captures what it was supposed to
+                                // be turned into if this if
+                                // statement is before move
+                                if(isPromo == true) {
+
                                     //Replaces last false with a true
                                     model.promotePop();
-                                    model.pawnPromotionCheck(didIPromote);
+                                    model.pawnPromotionCheck(isPromo);
                                     IChessPiece promotedPawn = new King(model.currentPlayer());
-                                    if (promotion.equals("Queen")) {
+                                    if (promo.equals("Queen")) {
                                         promotedPawn = new Queen(model.currentPlayer());
                                     }
-                                    if (promotion.equals("Knight")) {
+                                    if (promo.equals("Knight")) {
                                         promotedPawn = new Knight(model.currentPlayer());
                                     }
-                                    if (promotion.equals("Rook")) {
+                                    if (promo.equals("Rook")) {
                                         promotedPawn = new Rook(model.currentPlayer());
                                     }
-                                    if (promotion.equals("Bishop")) {
+                                    if (promo.equals("Bishop")) {
                                         promotedPawn = new Bishop(model.currentPlayer());
                                     }
                                     model.setPiece(m.toRow, m.toColumn, promotedPawn);

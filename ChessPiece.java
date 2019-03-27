@@ -46,7 +46,8 @@ public abstract class ChessPiece implements IChessPiece {
     public boolean isValidMove(Move move, IChessPiece[][] board) {
         boolean valid = false;
 
-        if (((move.fromRow == move.toRow) && (move.fromColumn == move.toColumn)) == false)
+        if (((move.fromRow == move.toRow) &&
+                (move.fromColumn == move.toColumn)) == false)
             return valid;
 
         return false;

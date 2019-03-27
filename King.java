@@ -79,17 +79,23 @@ public class King extends ChessPiece {
 
         // Prevents movement other than surrounding cells
 
-        //Checks for white castling at both locations. Makes sure neither have moved, and you selected it's piece
-        if(board[move.fromRow][move.fromColumn].player() == Player.WHITE && (move.toRow == 7 && move.toColumn == 0) &&
-        ((moveCount == 0) && (board[7][0] != null) && (board[7][0].getMoveCount() == 0))){
+        //Checks for white castling at both locations. Makes sure
+        // neither have moved, and you selected it's piece
+        if(board[move.fromRow][move.fromColumn].player() == Player.WHITE
+                && (move.toRow == 7 && move.toColumn == 0) &&
+        ((moveCount == 0) && (board[7][0] != null) &&
+                (board[7][0].getMoveCount() == 0))){
             for(int i = 1; i < 4; i++){
                 if(board[7][i] != null){
                     valid = false;
                 }
             }
             move.toColumn = 2;
-        }else if(board[move.fromRow][move.fromColumn].player() == Player.WHITE && (move.toRow == 7 && move.toColumn == 7) &&
-                ((moveCount == 0) && (board[7][7] != null) && (board[7][7].getMoveCount() == 0))){
+        }else if(board[move.fromRow][move.fromColumn].player() ==
+                Player.WHITE &&
+                (move.toRow == 7 && move.toColumn == 7) &&
+                ((moveCount == 0) && (board[7][7] != null) &&
+                        (board[7][7].getMoveCount() == 0))){
             for(int i = 6; i < 4; i--){
                 if(board[7][i] != null){
                     valid = false;
@@ -99,8 +105,11 @@ public class King extends ChessPiece {
 
         }
         //Checks for black castling at both locations.
-        else if(board[move.fromRow][move.fromColumn].player() == Player.BLACK && (move.toRow == 0 && move.toColumn == 0) &&
-                ((moveCount == 0) && (board[0][0] != null) && (board[0][0].getMoveCount() == 0))){
+        else if(board[move.fromRow][move.fromColumn].player() ==
+                Player.BLACK && (move.toRow == 0 &&
+                move.toColumn == 0) && ((moveCount == 0) &&
+                (board[0][0] != null) &&
+                (board[0][0].getMoveCount() == 0))){
             for(int i = 1; i < 4; i++){
                 if(board[0][i] != null){
                     valid = false;
@@ -108,8 +117,11 @@ public class King extends ChessPiece {
             }
             move.toColumn = 2;
 
-        }else if(board[move.fromRow][move.fromColumn].player() == Player.BLACK && (move.toRow == 0 && move.toColumn == 7) &&
-                ((moveCount == 0) && (board[0][7] != null) && (board[0][7].getMoveCount() == 0))){
+        }else if(board[move.fromRow][move.fromColumn].player() ==
+                Player.BLACK && (move.toRow == 0 &&
+                move.toColumn == 7) && ((moveCount == 0) &&
+                (board[0][7] != null) &&
+                (board[0][7].getMoveCount() == 0))){
             for(int i = 6; i < 4; i--){
                 if(board[0][i] != null){
                     valid = false;
@@ -124,13 +136,15 @@ public class King extends ChessPiece {
         }
 
         // Prevents capturing itself
-        if ((move.fromRow == move.toRow) && (move.fromColumn == move.toColumn)) {
+        if ((move.fromRow == move.toRow) &&
+                (move.fromColumn == move.toColumn)) {
             valid = false;
         }
 
         // Prevents capturing same color pieces
         if (board[move.toRow][move.toColumn] != null) {
-            if (board[move.toRow][move.toColumn].player() == board[move.fromRow][move.fromColumn].player()) {
+            if (board[move.toRow][move.toColumn].player() ==
+                    board[move.fromRow][move.fromColumn].player()) {
                 valid = false;
             }
         }

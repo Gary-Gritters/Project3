@@ -13,7 +13,5 @@ public enum Player {
             return WHITE;
         else
             return BLACK;
-
-        //	return this == BLACK ? WHITE : BLACK;
-    }
+        }
 }

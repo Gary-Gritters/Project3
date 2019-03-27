@@ -83,7 +83,8 @@ public class Bishop extends ChessPiece {
         }
 
         // Prevents non-diagonal movements
-        if(move.fromRow == move.toRow || move.fromColumn == move.toColumn){
+        if(move.fromRow == move.toRow ||
+                move.fromColumn == move.toColumn){
             valid = false;
         }
 
@@ -96,7 +97,8 @@ public class Bishop extends ChessPiece {
             int pathlength = move.toRow - move.fromRow;
 
             for (int i = 1; i < pathlength; i++) {
-                if (board[move.fromRow + i][move.fromColumn + i] != null) {
+                if (board[move.fromRow + i][move.fromColumn + i]
+                        != null) {
                     valid = false;
                 }
             }
@@ -107,7 +109,8 @@ public class Bishop extends ChessPiece {
             int pathlength =  move.fromRow - move.toRow;
 
             for (int i = 1; i < pathlength; i++) {
-                if (board[move.fromRow - i][move.fromColumn + i] != null) {
+                if (board[move.fromRow - i][move.fromColumn + i]
+                        != null) {
                     valid = false;
                 }
             }
@@ -118,7 +121,8 @@ public class Bishop extends ChessPiece {
             int pathlength = move.toRow - move.fromRow;
 
             for (int i = 1; i < pathlength; i++) {
-                if (board[move.fromRow + i][move.fromColumn - i] != null) {
+                if (board[move.fromRow + i][move.fromColumn - i]
+                        != null) {
                     valid = false;
                 }
             }
@@ -129,7 +133,8 @@ public class Bishop extends ChessPiece {
             int pathlength = move.fromRow - move.toRow;
 
             for (int i = 1; i < pathlength; i++) {
-                if (board[move.fromRow - i][move.fromColumn - i] != null) {
+                if (board[move.fromRow - i][move.fromColumn - i]
+                        != null) {
                     valid = false;
                 }
             }
@@ -137,7 +142,8 @@ public class Bishop extends ChessPiece {
 
         // Prevents capturing same color pieces
         if (board[move.toRow][move.toColumn] != null) {
-            if (board[move.toRow][move.toColumn].player() == board[move.fromRow][move.fromColumn].player()) {
+            if (board[move.toRow][move.toColumn].player() ==
+                    board[move.fromRow][move.fromColumn].player()) {
                 valid = false;
             }
         }

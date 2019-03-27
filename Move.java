@@ -15,8 +15,9 @@ public class Move {
 
     @Override
     public String toString() {
-        return "p3.Move [fromRow=" + fromRow + ", fromColumn=" + fromColumn + ", toRow=" + toRow + ", toColumn=" + toColumn
-                + "]";
+        return "p3.Move [fromRow=" + fromRow + ", fromColumn=" +
+                fromColumn + ", toRow=" + toRow + ", toColumn=" +
+                toColumn + "]";
     }
 
 

@@ -66,9 +66,12 @@ public class Pawn extends ChessPiece {
             return false;
         }
 
-        if (board[move.fromRow][move.fromColumn - 1].getMoveCount() == 1 &&
-                board[move.fromRow][move.fromColumn - 1].type().equals("p3.Pawn") &&
-                board[move.fromRow][move.fromColumn - 1].player() != board[move.fromRow][move.fromColumn].player())
+        if (board[move.fromRow][move.fromColumn - 1].
+                getMoveCount() == 1 &&
+                board[move.fromRow][move.fromColumn - 1].type().
+                        equals("p3.Pawn") &&
+                board[move.fromRow][move.fromColumn - 1].player() !=
+                        board[move.fromRow][move.fromColumn].player())
             return true;
         return false;
     }
@@ -89,9 +92,11 @@ public class Pawn extends ChessPiece {
             return false;
         }
 
-        if (board[move.fromRow][move.fromColumn + 1].getMoveCount() == 1 &&
-                board[move.fromRow][move.fromColumn + 1].type().equals("p3.Pawn") &&
-                board[move.fromRow][move.fromColumn + 1].player() != board[move.fromRow][move.fromColumn].player()) {
+        if (board[move.fromRow][move.fromColumn + 1].getMoveCount()
+                == 1 && board[move.fromRow][move.fromColumn + 1].
+                type().equals("p3.Pawn") &&
+                board[move.fromRow][move.fromColumn + 1].player() !=
+                        board[move.fromRow][move.fromColumn].player()) {
             return true;
         }
 
@@ -127,7 +132,8 @@ public class Pawn extends ChessPiece {
             } else rowChangeABS = rowChange;
 
             // Sets homerow for each pawn color
-            if (board[move.fromRow][move.fromColumn].player() == Player.BLACK) {
+            if (board[move.fromRow][move.fromColumn].player() ==
+                    Player.BLACK) {
                 if (move.fromRow == 1) {
                     homerow = true;
                 }
@@ -173,7 +179,8 @@ public class Pawn extends ChessPiece {
                 }
 
                 // Prevents capturing same color pieces
-                if (board[move.toRow][move.toColumn].player() == board[move.fromRow][move.fromColumn].player()) {
+                if (board[move.toRow][move.toColumn].player() ==
+                        board[move.fromRow][move.fromColumn].player()) {
                     valid = false;
                 }
 
@@ -211,7 +218,8 @@ public class Pawn extends ChessPiece {
             }
 
             // Prevents capturing itself
-            if ((move.fromRow == move.toRow) && (move.fromColumn == move.toColumn)) {
+            if ((move.fromRow == move.toRow) &&
+                    (move.fromColumn == move.toColumn)) {
                 valid = false;
             }
 
@@ -219,15 +227,23 @@ public class Pawn extends ChessPiece {
             if (!(move.fromColumn == move.toColumn)) {
 
 
-                if (move.fromRow == 3 && isEnpasLeft(move, board) && move.fromColumn == move.toColumn + 1) {
+                if (move.fromRow == 3 && isEnpasLeft(move, board) &&
+                        move.fromColumn == move.toColumn + 1) {
 
-                } else if (move.fromRow == 3 && isEnpasRight(move, board) && move.fromColumn == move.toColumn - 1) {
+                } else if (move.fromRow == 3 &&
+                        isEnpasRight(move, board) &&
+                        move.fromColumn == move.toColumn - 1) {
 
-                } else if (move.fromRow == 4 && isEnpasLeft(move, board) && move.fromColumn == move.toColumn + 1) {
+                } else if (move.fromRow == 4 &&
+                        isEnpasLeft(move, board) &&
+                        move.fromColumn == move.toColumn + 1) {
 
-                } else if (move.fromRow == 4 && isEnpasRight(move, board) && move.fromColumn == move.toColumn - 1) {
+                } else if (move.fromRow == 4 &&
+                        isEnpasRight(move, board) &&
+                        move.fromColumn == move.toColumn - 1) {
 
-                } else if (board[move.toRow][move.toColumn] == null) {
+                } else if (board[move.toRow][move.toColumn]
+                        == null) {
                     valid = false;
                 }
             }

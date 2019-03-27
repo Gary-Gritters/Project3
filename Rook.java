@@ -63,17 +63,20 @@ public class Rook extends ChessPiece {
         boolean valid = true;
         // More code is needed
 
-        if (((move.fromRow == move.toRow) && (move.fromColumn == move.toColumn)) == false) {
+        if (((move.fromRow == move.toRow) &&
+                (move.fromColumn == move.toColumn)) == false) {
 
             // Prevents capturing same color pieces
             if (board[move.toRow][move.toColumn] != null) {
-                if (board[move.toRow][move.toColumn].player() == board[move.fromRow][move.fromColumn].player()) {
+                if (board[move.toRow][move.toColumn].player() ==
+                        board[move.fromRow][move.fromColumn].player()) {
                     valid = false;
                 }
             }
 
             // Prevents non-horizontal or non-vertical movement
-            if (!((move.fromRow == move.toRow) ^ (move.fromColumn == move.toColumn))) {
+            if (!((move.fromRow == move.toRow) ^
+                    (move.fromColumn == move.toColumn))) {
                 valid = false;
             }
 
@@ -88,6 +91,7 @@ public class Rook extends ChessPiece {
                         }
                     }
                 }
+
                 // Checks path from low from row to high to row
                 if (move.fromRow < move.toRow) {
                     for (int i = move.fromRow + 1; i < move.toRow; i++) {
@@ -103,7 +107,8 @@ public class Rook extends ChessPiece {
 
                 // Checks path from high from col to low to col
                 if (move.fromColumn > move.toColumn) {
-                    for (int i = move.fromColumn - 1; i > move.toColumn; i--) {
+                    for (int i = move.fromColumn - 1;
+                         i > move.toColumn; i--) {
                         if (board[move.toRow][i] != null) {
                             valid = false;
                         }
@@ -112,7 +117,8 @@ public class Rook extends ChessPiece {
 
                 // Checks path from low from col to high to col
                 else if (move.fromColumn < move.toColumn) {
-                    for (int i = move.fromColumn + 1; i < move.toColumn; i++) {
+                    for (int i = move.fromColumn + 1;
+                         i < move.toColumn; i++) {
                         if (board[move.toRow][i] != null) {
                             valid = false;
                         }
@@ -120,11 +126,12 @@ public class Rook extends ChessPiece {
                 }
             }
         }
+
         // Prevents capturing itself
-        if ((move.fromRow == move.toRow) && (move.fromColumn == move.toColumn)) {
+        if ((move.fromRow == move.toRow) &&
+                (move.fromColumn == move.toColumn)) {
             valid = false;
         }
-
 
         return valid;
 

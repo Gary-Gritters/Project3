@@ -79,7 +79,8 @@ public class Knight extends ChessPiece {
         else colChangeABS = colChange;
 
         // Checks col & row ChangeABS are in the correct range
-        if((colChangeABS < 1 && colChangeABS > 2)||(rowChangeABS < 1 && rowChangeABS > 2)){
+        if((colChangeABS < 1 && colChangeABS > 2)||
+                (rowChangeABS < 1 && rowChangeABS > 2)){
             valid = false;
         }
 
@@ -94,13 +95,15 @@ public class Knight extends ChessPiece {
 
 
         // Prevents capturing itself
-        if ((move.fromRow == move.toRow) && (move.fromColumn == move.toColumn)) {
+        if ((move.fromRow == move.toRow) &&
+                (move.fromColumn == move.toColumn)) {
             valid = false;
         }
 
         // Prevents capturing same color pieces
         if (board[move.toRow][move.toColumn] != null) {
-            if (board[move.toRow][move.toColumn].player() == board[move.fromRow][move.fromColumn].player()) {
+            if (board[move.toRow][move.toColumn].player() ==
+                    board[move.fromRow][move.fromColumn].player()) {
                 valid = false;
             }
         }

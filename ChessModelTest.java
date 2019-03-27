@@ -404,6 +404,6 @@ public class ChessModelTest {
 
         model.setPiece(4,4,new Bishop(Player.WHITE));
 
-        assertTrue(model.pieceAt(4,4).toString().substring(0,9).equals("p3.Bishop"));
+        assertTrue(model.pieceAt(4,4).type().equals("p3.Bishop"));
     }
 }
